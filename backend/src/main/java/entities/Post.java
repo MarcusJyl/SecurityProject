@@ -31,27 +31,33 @@ public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @JoinColumn(name = "user_id")
+
+    @JoinColumn(name = "username")
     @NotNull
     @ManyToOne()
     private User user;
-    
+
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
-    
+
     @Size(min = 1, max = 40)
     @Column(name = "title")
     private String title;
-    
+
     @Size(min = 1, max = 255)
     @Column(name = "content")
     private String Content;
-    
+
     @OneToMany(mappedBy = "post")
     private List<Like> likes;
 
     public Post() {
+    }
+
+    public Post(User user, String title, String Content) {
+        this.user = user;
+        this.title = title;
+        this.Content = Content;
     }
 
     public User getUser() {
@@ -86,5 +92,4 @@ public class Post implements Serializable {
         this.id = id;
     }
 
-    
 }

@@ -23,3 +23,23 @@ export const makeOptions = (method, addToken, body) => {
   }
   return opts;
 };
+
+export const fetcher = (URL, options, action, setError, actionIfError) => {
+  return fetch(URL, options)
+    .then(handleHttpErrors)
+    .then(action)
+    .catch((err) => {
+      if (actionIfError) actionIfError();
+      else catcher(err, setError);
+    });
+};
+
+const catcher = (err, setError) => {
+  if (err.status) {
+    err.fullError.then((e) => {
+      setError(e.message);
+    });
+  } else {
+    setError("Network error");
+  }
+};

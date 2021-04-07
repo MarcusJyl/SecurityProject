@@ -1,11 +1,11 @@
 import React from "react";
 
 
-export default function Header({text}) {
+export default function Header({ text }) {
 
   return (
-    <>
-    <h1 >{text}</h1>
-    </>
+    <div className="text-center w-100">
+      <h1 >{text}</h1>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { makeOptions, handleHttpErrors } from "../utils/fetchUtils";
-import { loginURL as URL } from "../utils/settings";
+import { URL } from "../utils/settings";
 
 function apiFacade() {
   const login = (user, password) => {
@@ -17,7 +17,7 @@ function apiFacade() {
       password,
     });
     return fetch(
-      "http://localhost:8080/jpareststarter/api/signup",
+      URL + "/api/signup",
       options
     ).then(handleHttpErrors);
   };

@@ -8,6 +8,7 @@ import {loginMethod, logoutMethode} from './utils/loginUtils'
 
 function App() {
   const init = { username: "", roles: [] };
+  const [error, setError] = useState("");
   const [user, setUser] = useState({...init});
   const login = (user, pass) => loginMethod(user, pass, setUser)
   const logout = () => logoutMethode(setUser, init)
@@ -27,7 +28,7 @@ function App() {
         <Switch>
           <Container fluid>
             <Route path="/" exact>
-              <Home />
+              <Home setError={setError}/>
             </Route>
             <Route path="/jokes">
               <Jokes />

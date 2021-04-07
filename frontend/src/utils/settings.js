@@ -1,3 +1,3 @@
-export const loginURL = "http://localhost:8080/test";
+export const URL = "http://localhost:8080/test";
 
-export const jokeURL = "http://localhost:8080/test/api/jokes";
+// export const jokeURL = "http://localhost:8080/test/api/jokes";
