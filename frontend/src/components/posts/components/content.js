@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Content() {
+export default function Content({text}) {
 
   return (
-    <h1>Content here</h1>
+    <h3>{text}</h3>
 
   );
 }

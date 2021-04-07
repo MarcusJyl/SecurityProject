@@ -1,0 +1,11 @@
+.jumbotron{
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+}
+
+.col , .col-md-2{
+    padding: 0;
+}

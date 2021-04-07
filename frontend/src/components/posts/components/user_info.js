@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function UserInfo() {
+export default function UserInfo({name}) {
 
   return (
       
-    <h1>i am Info</h1>
+    <p>{name}</p>
 
   );
 }
