@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,6 +37,9 @@ public class Post implements Serializable {
     @ManyToOne()
     private User user;
     
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
+    
     @Size(min = 1, max = 40)
     @Column(name = "title")
     private String title;
@@ -42,6 +47,9 @@ public class Post implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "content")
     private String Content;
+    
+    @OneToMany(mappedBy = "post")
+    private List<Like> likes;
 
     public Post() {
     }
