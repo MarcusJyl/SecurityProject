@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
-import { Jokes, Signup, Login, Home } from "./components";
+import {Navbar} from './components/components'
+import { Jokes, Signup, Login, Home } from "./routes";
 import { getUserByJwt, setToken } from "./utils/token";
 import {loginMethod, logoutMethode} from './utils/loginUtils'
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {Jumbotron} from 'react-bootstrap'
-import {Content, Header, UserInfo} from './post components/components'
+import {Content, Header, UserInfo} from './components/components'
 
 export default function Post() {
 
