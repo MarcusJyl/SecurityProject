@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Jumbotron, Row, Col, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function LoginDisplay({ login, user, logout }) {
   const init = { username: "", password: "" };
   const [loginCredentials, setLoginCredentials] = useState(init);
-
+  const [enableButton, setEnableButton] = useState(true);
+  
   const performLogin = (evt) => {
+    console.log("hej");
     evt.preventDefault();
     login(loginCredentials.username, loginCredentials.password);
   };
@@ -16,6 +19,10 @@ function LoginDisplay({ login, user, logout }) {
       [evt.target.id]: evt.target.value,
     });
   };
+  const onChange1 = () => {
+    setEnableButton(false);
+  };
+
   return (
     <Row>
       <Col></Col>
@@ -36,8 +43,11 @@ function LoginDisplay({ login, user, logout }) {
                   type="Password"
                   placeholder="Enter Password"
                 />
-
-                <button className="btn btn-primary m-2" onClick={performLogin}>
+                <ReCAPTCHA
+                  sitekey="6Lfg8Z8aAAAAAMO7v3r1E-zIFfkvRQOkeH5X9MwX"
+                  onChange={onChange1}
+                />
+                <button className="btn btn-primary m-2" onClick={performLogin} disabled={enableButton}>
                   login
                 </button>
               </Form.Group>
