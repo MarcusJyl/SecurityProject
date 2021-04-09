@@ -24,7 +24,7 @@ function apiFacade() {
 
   const fetchUserRole = (user) => {
     const options = makeOptions("GET", true);
-    return fetch(URL + "/api/info/" + user, options).then(handleHttpErrors);
+    return fetch(URL + "/api/" + user, options).then(handleHttpErrors);
   };
 
   return {

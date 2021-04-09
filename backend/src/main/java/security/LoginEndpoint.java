@@ -39,6 +39,7 @@ public class LoginEndpoint {
   @Produces(MediaType.APPLICATION_JSON)
   public Response login(String jsonString) throws AuthenticationException {
     JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+      System.out.println(json);
     String username = json.get("username").getAsString();
     String password = json.get("password").getAsString();
 

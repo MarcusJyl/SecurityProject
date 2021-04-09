@@ -42,6 +42,11 @@ public class User implements Serializable {
 
   @OneToMany(mappedBy = "user")
   private List<Like> likes;
+  
+  @Basic(optional = true)
+  @Size(max = 255)
+  @Column(name = "profile_img_link")
+  private String linkToProfileImg;
  
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
@@ -95,5 +100,31 @@ public class User implements Serializable {
   public void addRole(Role userRole) {
     roleList.add(userRole);
   }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
+
+    public String getLinkToProfileImg() {
+        return linkToProfileImg;
+    }
+
+    public void setLinkToProfileImg(String linkToProfileImg) {
+        this.linkToProfileImg = linkToProfileImg;
+    }
+  
+  
 
 }

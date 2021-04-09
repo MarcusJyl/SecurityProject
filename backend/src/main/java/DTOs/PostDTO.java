@@ -12,12 +12,13 @@ import entities.Post;
  * @author marcg
  */
 public class PostDTO {
-    
+
     private String title;
     private String content;
     private String username;
     private int id;
     private int likes;
+    private String profileImg;
 
     public PostDTO(String title, String content) {
         this.title = title;
@@ -30,9 +31,8 @@ public class PostDTO {
         this.username = post.getUser().getUserName();
         this.id = post.getId();
         this.likes = 0;
+        this.profileImg = post.getUser().getLinkToProfileImg();
     }
-    
-    
 
     public String getUsername() {
         return username;

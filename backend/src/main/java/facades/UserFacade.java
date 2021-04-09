@@ -54,7 +54,8 @@ public class UserFacade {
             Query query = em.createQuery("SELECT u.userName FROM User u WHERE u.userName = :name");
             query.setParameter("name", userDTO.getName());
             name = (String) query.getSingleResult();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         if (name != null) {
             throw new InvalidInputException(String.format("The name %s is already taken", name));
@@ -69,6 +70,23 @@ public class UserFacade {
         em.getTransaction().commit();
 
         return new UserDTO(user);
+    }
+
+    public String setProfileImageLink(String username, String link) throws InvalidInputException {
+        EntityManager em = emf.createEntityManager();
+        String name = null;
+        try {
+            em.getTransaction().begin();
+            Query query = em.createQuery("UPDATE User u SET U.linkToProfileImg=:link WHERE u.userName=:username ");
+            query.setParameter("username", username);
+            query.setParameter("link", link).executeUpdate();
+            em.getTransaction().commit();
+
+            return "DOne";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "";
+        }
     }
 
 }

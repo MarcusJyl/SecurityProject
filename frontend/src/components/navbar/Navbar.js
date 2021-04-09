@@ -11,8 +11,8 @@ function NavbarShow({ user, logout }) {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
-          <Link to="/jokes" className="nav-link">
-            Jokes
+          <Link to="/profile" className="nav-link">
+            Profile
           </Link>
         </Nav>
         <Nav>

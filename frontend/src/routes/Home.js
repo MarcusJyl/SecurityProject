@@ -26,8 +26,6 @@ export default function Home({ setError }) {
         <Col md={2}></Col>
         <Col className="justify-content-md-center">
           <AddPost setError={setError} />
-          <br></br>
-          <input type="file" onChange={fileSelectedHandler} />
         </Col>
         <Col md={2}></Col>
       </Row>
@@ -42,7 +40,7 @@ export default function Home({ setError }) {
           })}
         </Col>
         <Col md={2}></Col>
-      </Row>¨
+      </Row>
 
     </>
   );

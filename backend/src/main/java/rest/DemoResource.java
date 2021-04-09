@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import entities.User;
+import errorhandling.InvalidInputException;
+import facades.UserFacade;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
@@ -24,21 +26,17 @@ import utils.EMF_Creator;
 /**
  * @author lam@cphbusiness.dk
  */
-@Path("info")
+@Path("user")
 public class DemoResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
+    public static final UserFacade facade = UserFacade.getUserFacade(EMF);
+
     @Context
     private UriInfo context;
 
     @Context
     SecurityContext securityContext;
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getInfoForAll() {
-        return "{\"msg\":\"Hello anonymous\"}";
-    }
 
     //Just to verify if the database is setup
     @GET
@@ -59,7 +57,6 @@ public class DemoResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("user")
     public String make() {
         String thisuser = securityContext.getUserPrincipal().getName();
         JsonObject obj = new JsonObject();
@@ -75,9 +72,21 @@ public class DemoResource {
         return obj.toString();
     }
 
+    @POST
+    @Path("picture")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
+    public String profilPic(String link) throws InvalidInputException {
+        String thisuser = securityContext.getUserPrincipal().getName();
+
+        return facade.setProfileImageLink(thisuser, "https://firebasestorage.googleapis.com/v0/b/tallans-imageupload-tutorial.appspot.com/o/images%2FUdklip.png?alt=media&token=eabf4882-ee23-47ce-b9a8-54aad3cef315");
+
+//        return obj.toString();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("user")
     @RolesAllowed("user")
     public String getFromUser() {
         String thisuser = securityContext.getUserPrincipal().getName();
@@ -112,4 +121,5 @@ public class DemoResource {
 
         return obj.toString();
     }
+
 }
