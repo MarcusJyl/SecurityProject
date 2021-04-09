@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Col, Jumbotron, Row, Button, Form } from "react-bootstrap";
 import { storage } from "../utils/firebase";
-import ReactSlider from 'react-slider'
 
 export default function Profile() {
   const [options, setOptions] = useState({})
@@ -14,7 +13,7 @@ export default function Profile() {
 
   function handleChangeRange(e, input) {
     let value = e.target.value | input
-    setOptions({range: value})
+    setOptions({ range: value })
     // setFile(e.target);
   }
 
@@ -68,10 +67,10 @@ export default function Profile() {
 
           {(file != null) && <>
             <img src={URL.createObjectURL(file)} alt="" />
-            <ReactSlider /></>}
-            <input type="range" onChange={handleChangeRange} value={options.range} max={1000}/>
-            <input type="number" onChange={handleChangeRange} value={options.range} max={1000}/>
-
+            <input type="range" onChange={handleChangeRange} value={options.range} max={1000} />
+            <input type="number" onChange={handleChangeRange} value={options.range} max={1000} />
+          </>
+          }
 
 
 
