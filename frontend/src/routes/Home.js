@@ -11,32 +11,41 @@ export default function Home({ setError }) {
   useEffect(() => {
     console.log("dasdasas")
 
-    postFacade.fetchData(({ all }) => {
+    postFacade.getAllPosts(({ all }) => {
       setPosts([...all.reverse()])
     }, setError)
   }, [])
 
+  const fileSelectedHandler = evt => {
+    console.log(evt.target.files[0].name)
+  }
+
   return (
     <>
+      <Row className="text-center p-4">
+        <Col md={2}></Col>
+        <Col className="justify-content-md-center">
+          <AddPost setError={setError} />
+          <br></br>
+          <input type="file" onChange={fileSelectedHandler} />
+        </Col>
+        <Col md={2}></Col>
+      </Row>
       <Row>
         <Col md={2}></Col>
         <Col>
           {/* hent alle post og insæt dem her */}
           {posts.map((post) => {
             return (
-              <Post post={post}/>
+              <Post post={post} />
             )
           })}
         </Col>
         <Col md={2}></Col>
       </Row>¨
-      <Row>
-        <Col md={2}></Col>
-        <Col>
-          <AddPost />
-        </Col>
-        <Col md={2}></Col>
-      </Row>
+
     </>
   );
+
+
 }

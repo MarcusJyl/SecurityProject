@@ -3,11 +3,17 @@ import { makeOptions, handleHttpErrors, fetcher } from "../utils/fetchUtils";
 
 
 function postFacade() {
-  const fetchData = (action, setError) => {
+  const getAllPosts = (action, setError) => {
     const options = makeOptions("GET", true);
     return fetcher(URL + "/api/post/all", options, action, setError);
   };
-  return { fetchData };
+
+  const addPost = (action, setError, body) => {
+    const options = makeOptions("POST", true, body);
+    return fetcher(URL + "/api/post", options, action, setError);
+  }
+
+  return { getAllPosts, addPost };
 }
 const facade = postFacade();
 export default facade;

@@ -10,6 +10,11 @@ import DTOs.PostsDTO;
 import com.google.gson.Gson;
 import entities.Post;
 import entities.User;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -32,13 +37,9 @@ public class PostFacade {
     }
     
     
-    public Post addPost(PostDTO dto){
+    public Post addPost(PostDTO dto, User user){
         EntityManager em = emf.createEntityManager();
-        
-        System.out.println(dto.getUsername());
-        User user = em.find(User.class, dto.getUsername());
-        System.out.println(user.getUserName());
-        
+
         em.getTransaction().begin();
         Post post = new Post(user, dto.getTitle(), dto.getContent());
         em.persist(post);
@@ -51,7 +52,7 @@ public class PostFacade {
         EntityManager em = emf.createEntityManager();
         
         PostsDTO dtos = new PostsDTO(em.createQuery("SELECT p FROM Post p").getResultList());
-
+        
         return dtos;
     }
     

@@ -1,12 +1,30 @@
 import { Col, Row, Modal, Button, Form } from 'react-bootstrap'
 import React, { useState, useEffect } from "react";
+import postFacade from '../facades/postFacade'
 
 
-export default function AddPost() {
+export default function AddPost({setError}) {
+  const init = {title: "", content: ""}
+
   const [show, setShow] = useState(false);
+  const [post, setPost] = useState({...init})
 
-  const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setPost({...init})
+    setShow(false);
+  }
+
+  const send = () => {
+    postFacade.addPost((data) => console.log(data), setError, post)
+    console.log(post)
+    handleClose()
+  }
+
+  const onchange = (evt) => {
+    setPost({...post, [evt.target.id]: evt.target.value})
+    console.log(evt.target.value)
+  }
 
   return (
     <>
@@ -20,18 +38,18 @@ export default function AddPost() {
         </Modal.Header>
         <Modal.Body>
 
-          <Form>
-            <Form.Group controlId="formBasicEmail">
+          <Form onChange={onchange}>
+            <Form.Group controlId="title">
               <Form.Label>Title</Form.Label>
-              <Form.Control type="email" placeholder="Enter title" />
+              <Form.Control type="text" placeholder="Enter title" minLength="3" maxLength="40"/>
               <Form.Text className="text-muted">
                 Ja du er Gay
               </Form.Text>
             </Form.Group>
 
-            <Form.Group controlId="exampleForm.ControlTextarea1">
+            <Form.Group controlId="content">
               <Form.Label>Content</Form.Label>
-              <Form.Control as="textarea" rows={3} placeholder="Enter you posts text here"/>
+              <Form.Control as="textarea" rows={3} placeholder="Enter you posts text here" maxLength="255"/>
             </Form.Group>
             {/* <Form.Group controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Check me out" />
@@ -42,7 +60,7 @@ export default function AddPost() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose} disabled>
+          <Button variant="primary" onClick={send}>
             Send
           </Button>
         </Modal.Footer>

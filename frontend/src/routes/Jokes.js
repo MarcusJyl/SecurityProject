@@ -1,26 +1,36 @@
-import facade from "../facades/fetchFacade";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { storage } from "../utils/firebase";
 
-export default function Jokes() {
-  const [dataFromServer, setDataFromServer] = useState({ isEmpty: true });
-  useEffect(() => {
-    facade.fetchData().then((data) => setDataFromServer(data));
-  }, []);
+export default function App() {
+  const [file, setFile] = useState(null);
+  const [url, setURL] = useState("");
+
+  function handleChange(e) {
+    setFile(e.target.files[0]);
+  }
+
+  function handleUpload(e) {
+    e.preventDefault();
+    const uploadTask = storage.ref(`/images/${file.name}`).put(file);
+    uploadTask.on("state_changed", console.log, console.error, () => {
+      storage
+        .ref("images")
+        .child(file.name)
+        .getDownloadURL()
+        .then((url) => {
+          setFile(null);
+          setURL(url);
+        });
+    });
+  }
 
   return (
-    <div className="text-center w-100">
-      <h1 className="p-3" style={{borderBottom: 2+"px solid black"}}>Jokes</h1>
-      {dataFromServer.isEmpty ? (
-        <p>Loading..</p>
-      ) : (
-        <>
-          <h3 className="p-3" style={{borderBottom: 2+"px solid black"}}>{dataFromServer.joke1}</h3>
-          <h3 className="p-3" style={{borderBottom: 2+"px solid black"}}>{dataFromServer.joke2}</h3>
-          <h3 className="p-3" style={{borderBottom: 2+"px solid black"}}>{dataFromServer.joke3}</h3>
-          <h3 className="p-3" style={{borderBottom: 2+"px solid black"}}>{dataFromServer.joke4}</h3>
-          <h3 className="p-3" style={{borderBottom: 2+"px solid black"}}>{dataFromServer.joke5}</h3>
-        </>
-      )}
+    <div>
+      <form onSubmit={handleUpload}>
+        <input type="file" onChange={handleChange} />
+        <button disabled={!file}>upload to firebase</button>
+      </form>
+      <img src={url} alt="" />
     </div>
   );
 }
