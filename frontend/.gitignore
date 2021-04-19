@@ -27,3 +27,4 @@ yarn-error.log*
 **/nb-configuration.xml
 
 /nbproject/
+**/firebase.js

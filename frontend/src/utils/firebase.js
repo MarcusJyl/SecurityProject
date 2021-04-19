@@ -1,16 +1,15 @@
 import firebase from 'firebase/app'
 import 'firebase/storage'
 
-var firebaseConfig = {
-    apiKey: "super secret keys.....asgvegxgevergfvr",
-    authDomain: "tallans-imageupload-tutorial.firebaseapp.com",
-    databaseURL: "https://tallans-imageupload-tutorial.firebaseio.com",
-    projectId: "tallans-imageupload-tutorial",
-    storageBucket: "tallans-imageupload-tutorial.appspot.com",
-    messagingSenderId: "super secret keys.....asgvegxgevergfvr",
-    appId: "super secret app id....adsfa;lsdkjf",
-    measurementId: "super secret as;dlkfjal;dskjf"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyBUk8AJmkVdQjZusQnvuU3UNwQvLDdEKwk",
+  authDomain: "banden-dde2c.firebaseapp.com",
+  projectId: "banden-dde2c",
+  storageBucket: "banden-dde2c.appspot.com",
+  messagingSenderId: "484649639439",
+  appId: "1:484649639439:web:3fe4493e056517021dcd7a",
+  measurementId: "G-XNBTLLYTCN"
+};
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
 

@@ -50,6 +50,10 @@ public class Post implements Serializable {
 
     @OneToMany(mappedBy = "post")
     private List<Like> likes;
+    
+    @Column(name = "img_link")
+    @Size(max = 255)
+    private String link;
 
     public Post() {
     }

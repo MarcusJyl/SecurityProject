@@ -31,6 +31,7 @@ public class DemoResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final UserFacade facade = UserFacade.getUserFacade(EMF);
+    private static Gson GSON = new Gson();
 
     @Context
     private UriInfo context;
@@ -76,11 +77,12 @@ public class DemoResource {
     @Path("picture")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed("admin")
-    public String profilPic(String link) throws InvalidInputException {
+    @RolesAllowed({"user", "admin"})
+    public String profilPic(String body) throws InvalidInputException {
         String thisuser = securityContext.getUserPrincipal().getName();
-
-        return facade.setProfileImageLink(thisuser, "https://firebasestorage.googleapis.com/v0/b/tallans-imageupload-tutorial.appspot.com/o/images%2FUdklip.png?alt=media&token=eabf4882-ee23-47ce-b9a8-54aad3cef315");
+        String link = GSON.fromJson(body, JsonObject.class).get("url").toString();
+        System.out.println("LINK: " + link);
+        return facade.setProfileImageLink(thisuser, link.substring(1,link.length()-1));
 
 //        return obj.toString();
     }

@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Jumbotron, Row, Button, Form } from "react-bootstrap";
 import { storage } from "../utils/firebase";
+import {fetcher, makeOptions} from '../utils/fetchUtils'
+import {URL as baseURL} from '../utils/settings'
 
-export default function Profile() {
+export default function Profile({setError}) {
   const [options, setOptions] = useState({})
   const [file, setFile] = useState(null);
   const [url, setURL] = useState("");
+
+  useEffect(async()=> {
+    const options = makeOptions('POST', true, {url})
+    console.log(baseURL + '/api/user/picture')
+    const data = await fetcher(baseURL + '/api/user/picture', options, ()=>{}, setError )
+    console.log(data)
+  }, [url])
 
   function handleChange(e) {
     setFile(e.target.files[0]);
