@@ -27,7 +27,7 @@ import utils.EMF_Creator;
  * @author lam@cphbusiness.dk
  */
 @Path("user")
-public class DemoResource {
+public class UserResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final UserFacade facade = UserFacade.getUserFacade(EMF);
