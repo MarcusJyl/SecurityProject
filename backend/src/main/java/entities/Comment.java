@@ -28,15 +28,40 @@ public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
     @JoinColumn(name = "post_id")
     @NotNull
     @ManyToOne
     private Post post;
-    
+
     @NotNull
     @Column(name = "text")
     private String text;
+
+    public Comment(Post post, String text) {
+        this.post = post;
+        post.addComment(this);
+        this.text = text;
+    }
+
+    public Comment() {
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public Integer getId() {
         return id;

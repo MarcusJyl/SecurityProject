@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,7 +39,7 @@ public class Post implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
+    private List<Comment> comments  = new ArrayList();
 
     @Size(min = 1, max = 40)
     @Column(name = "title")
@@ -68,6 +69,11 @@ public class Post implements Serializable {
         return user;
     }
 
+        
+    public void addComment(Comment comment){
+        comments.add(comment);
+    }
+    
     public void setUser(User user) {
         this.user = user;
     }

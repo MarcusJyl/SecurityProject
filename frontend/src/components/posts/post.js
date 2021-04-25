@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Container, Jumbotron, Row } from 'react-bootstrap'
 import { Content, Header, UserInfo, Footer } from './components/components'
 
 export default function Post({ post }) {
-
-  const { title, content, username, profileImg } = post
+ 
+  const { title, content, username, profileImg, id } = post
+  const [showComments, setShowComments] = useState(false)
 
   return (
     <Jumbotron>
@@ -15,9 +16,10 @@ export default function Post({ post }) {
             <Row style={{ borderBottom: 5 + 'px solid red' }}><Header text={title} /></Row>
             <Row className="w-100"><Content text={content} /></Row>
           </Container>
-          <Row className="pb-2"><Footer /></Row>
+          <Row className="pb-2"><Footer setShowComments={setShowComments}/></Row>
         </Col>
       </Row>
+      {showComments && <p>sadasdadas</p>}
     </Jumbotron>
   );
 }

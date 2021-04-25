@@ -5,8 +5,8 @@
  */
 package rest;
 
+import DTOs.CommentsDTO;
 import DTOs.PostDTO;
-import DTOs.PostsDTO;
 import DTOs.QuoteDTO;
 import DTOs.UserDTO;
 import com.google.gson.Gson;
@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
@@ -62,8 +64,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  *
  * @author marcg
  */
-@Path("post")
-public class PostResource {
+@Path("comment")
+public class CommentResource {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
@@ -72,55 +74,45 @@ public class PostResource {
     @Context
     private UriInfo context;
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String getQuote() throws IOException {
-        String quote = HttpUtils.fetchData("https://api.kanye.rest\n");
-        QuoteDTO quoteDTO = GSON.fromJson(quote, QuoteDTO.class);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String addComment(String body) throws InvalidInputException {
+        EntityManager em = EMF.createEntityManager();
 
-        return GSON.toJson(quoteDTO);
+        JsonObject bodyObj = GSON.fromJson(body, JsonObject.class);
+        int postID = bodyObj.get("post").getAsInt();
+        String text = bodyObj.get("text").getAsString();
+
+        try {
+            Post post = em.find(Post.class, postID);
+            System.out.println(post.toString());
+            Comment comment = new Comment(post, text);
+            em.getTransaction().begin();
+            em.persist(comment);
+            em.persist(post);
+            em.getTransaction().commit();
+
+            return GSON.toJson(postID);
+        } catch (Exception e) {
+            throw new InvalidInputException("Cloud not find post with id: " + postID);
+        }
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("{admin, user}")
-    public String addPost(String postString,
-            @HeaderParam("x-access-token") String token) throws ParseException, AuthenticationException {
-        PostDTO dto = GSON.fromJson(postString, PostDTO.class
-        );
+    @Path("{postID}")
+    public String getCommetForPost(@PathParam("postID") String postID) throws InvalidInputException {
         EntityManager em = EMF.createEntityManager();
-
-        try {
-            UserPrincipal userPrincipal = getUserPrincipalFromTokenIfValid(token);
-            User user = em.find(User.class,
-                    userPrincipal.getName());
-            PostDTO post = new PostDTO(facade.addPost(dto, user));
-            return GSON.toJson(post);
-        } catch (AuthenticationException | ParseException | JOSEException ex) {
-            if (ex instanceof AuthenticationException) {
-                throw (AuthenticationException) ex;
-            }
-        }
-        return null;
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("all")
-    public String getAllPosts() {
-        return GSON.toJson(facade.getAllPosts());
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{userName}")
-    public String getUserPost(@PathParam("userName") String userDTO) {
-        try {
-            PostsDTO posts = facade.getAllPostsFromUser(userDTO);
-            return GSON.toJson(posts);
-        } catch (JsonSyntaxException e) {
-            return e.getMessage();
+        
+        try{
+            Query q = em.createQuery("SELECT c FROM Comment c WHERE c.post = :postID", Comment.class);
+            q.setParameter("postID", postID);
+            CommentsDTO res = new CommentsDTO(q.getResultList());
+            return GSON.toJson(res);
+        } catch (Exception e){
+            throw new InvalidInputException("fuck af so");
         }
     }
 

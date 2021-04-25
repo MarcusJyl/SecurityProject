@@ -60,17 +60,16 @@ public class PostFacade {
         return dtos;
     }
     
-    public ArrayList<PostsDTO> getAllPostsFromUser(UserDTO userDTO){
+    public PostsDTO getAllPostsFromUser(String userDTO){
         EntityManager em = emf.createEntityManager();
         ArrayList<PostsDTO> results = new ArrayList();
         try{
-            TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.username = :name", entities.Post.class);
-            query.setParameter("name", userDTO.getName());
+            TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user.userName = :name", entities.Post.class);
+            query.setParameter("name", userDTO);
             List<Post> posts = query.getResultList();
-            for (Post post : posts) {
-                posts.add(post);
-            }
-            return results;
+            PostsDTO postsDTO = new PostsDTO(posts);
+
+            return postsDTO;
         }   finally{
             em.close();
         }
