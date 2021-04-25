@@ -10,16 +10,18 @@ export default function Post({ post, setError }) {
   return (
     <Jumbotron>
       <Row>
-        <Col md={2} style={{ borderRight: 5 + 'px solid red' }}><UserInfo name={username} profileImg={profileImg} /></Col>
+        <Col md={2} style={{ borderRight: 1 + 'px solid gray' }}><UserInfo name={username} profileImg={profileImg} /></Col>
         <Col >
           <Container fluid className="p-0 m-0">
-            <Row style={{ borderBottom: 5 + 'px solid red' }}><Header text={title} /></Row>
+            <Row><Header text={title} /></Row>
             <Row className="w-100"><Content text={content} /></Row>
           </Container>
           <Row className="pb-2"><Footer setShowComments={setShowComments} setError={setError} postID={id}/></Row>
         </Col>
       </Row>
-      {showComments && <Comments setError={setError} postID={id}/>}
+      {showComments && 
+      <Comments setError={setError} postID={id}/>
+      }
     </Jumbotron>
   );
 }
