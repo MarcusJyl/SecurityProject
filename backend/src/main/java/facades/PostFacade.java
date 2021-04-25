@@ -7,6 +7,7 @@ package facades;
 
 import DTOs.PostDTO;
 import DTOs.PostsDTO;
+import DTOs.UserDTO;
 import com.google.gson.Gson;
 import entities.Post;
 import entities.User;
@@ -15,9 +16,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -56,4 +60,24 @@ public class PostFacade {
         return dtos;
     }
     
-}
+    public ArrayList<PostsDTO> getAllPostsFromUser(UserDTO userDTO){
+        EntityManager em = emf.createEntityManager();
+        ArrayList<PostsDTO> results = new ArrayList();
+        try{
+            TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.username = :name", entities.Post.class);
+            query.setParameter("name", userDTO.getName());
+            List<Post> posts = query.getResultList();
+            for (Post post : posts) {
+                posts.add(post);
+            }
+            return results;
+        }   finally{
+            em.close();
+        }
+    }
+
+    
+    }
+    
+    
+

@@ -7,10 +7,12 @@ package rest;
 
 import DTOs.PostDTO;
 import DTOs.QuoteDTO;
+import DTOs.UserDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -41,10 +43,12 @@ import utils.HttpUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -102,6 +106,18 @@ public class PostResource {
     @Path("all")
     public String getAllPosts() {
         return GSON.toJson(facade.getAllPosts());
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("userposts/{userName}")
+    public String getUserPost(@PathParam("userName") UserDTO userDTO) {
+        try {
+            ArrayList posts = facade.getAllPostsFromUser(userDTO);
+            return GSON.toJson(posts);
+        } catch (JsonSyntaxException e) {
+            return e.getMessage();
+        }
     }
 
 
