@@ -28,6 +28,7 @@ public class ApplicationConfig extends Application {
         resources.add(rest.PostResource.class);
         resources.add(rest.QuoteResource.class);
         resources.add(rest.RenameMeResource.class);
+        resources.add(rest.SearchResource.class);
         resources.add(rest.SignupEndpoint.class);
         resources.add(rest.UserResource.class);
         resources.add(security.JWTAuthenticationFilter.class);
