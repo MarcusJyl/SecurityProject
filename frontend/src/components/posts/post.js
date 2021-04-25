@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Col, Container, Jumbotron, Row } from 'react-bootstrap'
-import { Content, Header, UserInfo, Footer } from './components/components'
+import { Content, Header, UserInfo, Footer, Comments } from './components/components'
 
-export default function Post({ post }) {
+export default function Post({ post, setError }) {
  
   const { title, content, username, profileImg, id } = post
   const [showComments, setShowComments] = useState(false)
@@ -16,10 +16,10 @@ export default function Post({ post }) {
             <Row style={{ borderBottom: 5 + 'px solid red' }}><Header text={title} /></Row>
             <Row className="w-100"><Content text={content} /></Row>
           </Container>
-          <Row className="pb-2"><Footer setShowComments={setShowComments}/></Row>
+          <Row className="pb-2"><Footer setShowComments={setShowComments} setError={setError} postID={id}/></Row>
         </Col>
       </Row>
-      {showComments && <p>sadasdadas</p>}
+      {showComments && <Comments setError={setError} postID={id}/>}
     </Jumbotron>
   );
 }

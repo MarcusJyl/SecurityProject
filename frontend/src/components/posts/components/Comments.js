@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import facade from '../../../facades/postFacade'
 
+export default function Comments({ setError, postID }) {
 
-export default function Footer({ setShowComments }) {
+    const [comments, setComments] = useState([])
+
+    useEffect(async() => {
+        let data = await facade.getAllCommentsForAPost(data => data, setError, postID)
+        setComments([...data.all])
+    }, [])
 
     return (
-        // <div className="h-100 w-100" style={{ background: "red" }}>
-            <div className="w-100">
-                <a href="#" onClick={() => setShowComments(true)} className="ml-2" style={{ float: "left" }}>Comment</a>
-                <a href="#" className="mr-2" style={{ float: 'right' }}>Like</a>
-            </div>
-        // </div>
+        <>
+        {comments.map(c => {
+            return(
+                <p>{c.text}</p>
+            )
+        })}
+        </>
     )
 }

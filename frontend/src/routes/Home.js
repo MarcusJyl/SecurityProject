@@ -35,7 +35,7 @@ export default function Home({ setError }) {
           {/* hent alle post og insæt dem her */}
           {posts.map((post) => {
             return (
-              <Post post={post} />
+              <Post post={post} setError={setError}/>
             )
           })}
         </Col>

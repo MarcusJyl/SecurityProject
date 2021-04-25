@@ -99,7 +99,7 @@ public class CommentResource {
         }
     }
 
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{postID}")
@@ -107,31 +107,13 @@ public class CommentResource {
         EntityManager em = EMF.createEntityManager();
         
         try{
-            Query q = em.createQuery("SELECT c FROM Comment c WHERE c.post = :postID", Comment.class);
-            q.setParameter("postID", postID);
-            CommentsDTO res = new CommentsDTO(q.getResultList());
+            Query q = em.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postID", Comment.class);
+            q.setParameter("postID", Integer.parseInt(postID));
+            List<Comment> comments = q.getResultList();
+            CommentsDTO res = new CommentsDTO(comments);
             return GSON.toJson(res);
         } catch (Exception e){
             throw new InvalidInputException("fuck af so");
-        }
-    }
-
-    private UserPrincipal getUserPrincipalFromTokenIfValid(String token)
-            throws ParseException, JOSEException, AuthenticationException {
-        SignedJWT signedJWT = SignedJWT.parse(token);
-        //Is it a valid token (generated with our shared key)
-        JWSVerifier verifier = new MACVerifier(SharedSecret.getSharedKey());
-
-        if (signedJWT.verify(verifier)) {
-            String roles = signedJWT.getJWTClaimsSet().getClaim("roles").toString();
-            String username = signedJWT.getJWTClaimsSet().getClaim("username").toString();
-
-            String[] rolesArray = roles.split(",");
-
-            return new UserPrincipal(username, rolesArray);
-//     return new UserPrincipal(username, roles);
-        } else {
-            throw new JOSEException("User could not be extracted from token");
         }
     }
 }
