@@ -74,6 +74,7 @@ public class PostResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
     public String getQuote() throws IOException {
         String quote = HttpUtils.fetchData("https://api.kanye.rest\n");
         QuoteDTO quoteDTO = GSON.fromJson(quote, QuoteDTO.class);
