@@ -15,12 +15,14 @@ public class CommentDTO {
     
     private int postID;
     private int id;
+    private String username;
     private String text;
 
     public CommentDTO(Comment comment) {
         this.postID = comment.getPost().getId();
         this.id = comment.getId();
         this.text = comment.getText();
+        this.username = comment.getUser().getUserName();
     }
 
     public int getPostID() {

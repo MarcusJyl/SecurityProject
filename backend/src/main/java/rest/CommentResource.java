@@ -21,8 +21,10 @@ import com.nimbusds.jwt.SignedJWT;
 import entities.Comment;
 import entities.Post;
 import entities.User;
+import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
 import facades.PostFacade;
+import facades.UserFacade;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,6 +59,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -70,15 +73,23 @@ public class CommentResource {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static final PostFacade facade = PostFacade.getUserFacade(EMF);
+    private static final UserFacade userFacade = UserFacade.getUserFacade(EMF);
 
     @Context
     private UriInfo context;
 
+    @Context
+    SecurityContext securityContext;
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addComment(String body) throws InvalidInputException {
+    @RolesAllowed({"user", "admin"})
+    public String addComment(String body) throws InvalidInputException, DatabaseException {
         EntityManager em = EMF.createEntityManager();
+
+        String username = securityContext.getUserPrincipal().getName();
+        User user = userFacade.findUser(username);
 
         JsonObject bodyObj = GSON.fromJson(body, JsonObject.class);
         int postID = bodyObj.get("post").getAsInt();
@@ -87,10 +98,11 @@ public class CommentResource {
         try {
             Post post = em.find(Post.class, postID);
             System.out.println(post.toString());
-            Comment comment = new Comment(post, text);
+            Comment comment = new Comment(post, text, user);
             em.getTransaction().begin();
             em.persist(comment);
             em.persist(post);
+            em.persist(user);
             em.getTransaction().commit();
 
             return GSON.toJson(postID);
@@ -108,7 +120,7 @@ public class CommentResource {
 
         try {
             Query q = em.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postID", Comment.class);
-           
+
             q.setParameter("postID", Integer.parseInt(postID));
             List<Comment> comments = q.getResultList();
             CommentsDTO res = new CommentsDTO(comments);

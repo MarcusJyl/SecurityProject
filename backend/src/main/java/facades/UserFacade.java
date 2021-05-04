@@ -90,6 +90,15 @@ public class UserFacade {
         }
     }
 
+    public User findUser(String username) throws DatabaseException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(User.class, username);
+        } catch (Exception e) {
+            throw new DatabaseException("Couldt not find user: " + username + " in databases");
+        }
+    }
+
     public void changePassword(String username, String newPassword, String oldPassword) throws AuthenticationException, InvalidInputException {
         EntityManager em = emf.createEntityManager();
         try {

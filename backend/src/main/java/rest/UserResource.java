@@ -1,12 +1,15 @@
 package rest;
 
+import DTOs.UsersDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entities.User;
 import errorhandling.InvalidInputException;
+import errorhandling.NotFoundException;
 import facades.UserFacade;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
@@ -20,6 +23,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import security.UserPrincipal;
@@ -140,6 +144,31 @@ public class UserResource {
         facade.changePassword(username, newPassword, oldPassword);
 
         return "Password changed";
+    }
+
+    @GET
+    @Path("by/usernames/{usernames}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user", "admin"})
+    public String getUSersByIDs(@PathParam("usernames") String usernamesInput) throws AuthenticationException, InvalidInputException, NotFoundException {
+        EntityManager em = EMF.createEntityManager();
+        System.out.println(usernamesInput);
+        String[] usernames = usernamesInput.split(",");
+        List<User> users = new ArrayList();
+
+        try {
+            for (String username : usernames) {
+                User user = em.find(User.class, username);
+                users.add(user);
+            }
+        } catch (Exception e) {
+            throw new NotFoundException("got an invalid user id");
+        }
+        
+        UsersDTO usersDTO = new UsersDTO(users);
+        System.out.println(usersDTO);
+
+        return GSON.toJson(usersDTO);
     }
 
 }

@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import facade from '../../../facades/postFacade'
+import userFacade from '../../../facades/userFacade'
+
 
 export default function Comments({ setError, postID }) {
 
     const [comments, setComments] = useState([])
 
     useEffect(async () => {
-        let data = await facade.getAllCommentsForAPost(data => data, setError, postID)
-        setComments([...data.all])
+        const data = await facade.getAllCommentsForAPost(data => data, setError, postID)
+        if (data) {
+            let usernames = []
+            data.all.forEach(d => {if(!usernames.includes(d.username)) usernames.push(d.username)})
+            const commenters = await userFacade.getUsersByIDs(data => data, setError, usernames)
+            setComments([...data.all])
+        }
     }, [])
 
     return (

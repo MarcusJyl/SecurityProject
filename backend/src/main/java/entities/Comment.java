@@ -29,6 +29,11 @@ public class Comment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JoinColumn(name = "username")
+    @NotNull
+    @ManyToOne()
+    private User user;
+
     @JoinColumn(name = "post_id")
     @NotNull
     @ManyToOne
@@ -38,10 +43,11 @@ public class Comment implements Serializable {
     @Column(name = "text")
     private String text;
 
-    public Comment(Post post, String text) {
+    public Comment(Post post, String text, User user) {
         this.post = post;
         post.addComment(this);
         this.text = text;
+        this.user = user;
     }
 
     public Comment() {
@@ -70,4 +76,14 @@ public class Comment implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    
 }
