@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Form, FormGroup, Button } from "react-bootstrap";
 
-function NavbarShow({ user, logout }) {
+
+
+function NavbarShow({ user, logout, setSearchInput }) {
+
+
+  function onChange(event){
+    setSearchInput(event.target.value)
+  }
+
+  
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Link to="/" className="navbar-brand">
@@ -14,7 +24,13 @@ function NavbarShow({ user, logout }) {
           <Link to="/profile" className="nav-link">
             Profile
           </Link>
+        
+        
         </Nav>
+        <input id="searchInput" type="text" placeholder="search" onChange={onChange}></input>
+        <Link to="/search">
+              <button className="btn btn-primary" id="searchButton">Search</button>
+        </Link>
         <Nav>
           {user.username !== "" ? (
             <>
