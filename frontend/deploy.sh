@@ -3,6 +3,7 @@
 XXXX="sec"
 DROPLET_URL="marcusravnjensen.dk"
 
+
 echo "##############################"
 echo "Building the frontend project"
 echo "##############################"
@@ -12,5 +13,5 @@ echo "##############################"
 echo "Deploying Frontend project..."
 echo "##############################"
 
-scp -r ./build root@$DROPLET_URL:/var/www/$XXXX
 
+scp -r ./build root@$DROPLET_URL:/var/www/$XXXX

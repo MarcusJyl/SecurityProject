@@ -105,14 +105,15 @@ public class CommentResource {
     @Path("{postID}")
     public String getCommetForPost(@PathParam("postID") String postID) throws InvalidInputException {
         EntityManager em = EMF.createEntityManager();
-        
-        try{
+
+        try {
             Query q = em.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postID", Comment.class);
+           
             q.setParameter("postID", Integer.parseInt(postID));
             List<Comment> comments = q.getResultList();
             CommentsDTO res = new CommentsDTO(comments);
             return GSON.toJson(res);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new InvalidInputException("fuck af so");
         }
     }

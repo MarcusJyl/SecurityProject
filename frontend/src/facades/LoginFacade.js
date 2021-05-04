@@ -27,10 +27,17 @@ function apiFacade() {
     return fetch(URL + "/api/" + user, options).then(handleHttpErrors);
   };
 
+  const logout = (user, password) => {
+    const options = makeOptions("POST", true,);
+    return fetch(URL + "/api/logout", options)
+      .then(handleHttpErrors)
+  };
+
   return {
     login,
     fetchUserRole,
     signup,
+    logout
   };
 }
 const facade = apiFacade();
