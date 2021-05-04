@@ -4,14 +4,11 @@ import { Navbar, Nav, Form, FormGroup, Button } from "react-bootstrap";
 
 
 
-function NavbarShow({ user, logout, setSearchInput }) {
-
-
+function NavbarShow({ user, logout, setSearchInput, search }) {
+  
   function onChange(event){
     setSearchInput(event.target.value)
   }
-
-  
 
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -27,9 +24,9 @@ function NavbarShow({ user, logout, setSearchInput }) {
         
         
         </Nav>
-        <input id="searchInput" type="text" placeholder="search" onChange={onChange}></input>
+        <input id="searchInput" type="text" placeholder="search" onChange={onChange}onKeyDown={evt => {if(evt.which == 13 || evt.keyCode == 13)search()}}></input>
         <Link to="/search">
-              <button className="btn btn-primary" id="searchButton">Search</button>
+              <button onClick={search} className="btn btn-primary" id="searchButton">Search</button>
         </Link>
         <Nav>
           {user.username !== "" ? (

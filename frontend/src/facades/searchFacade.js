@@ -4,9 +4,9 @@ import { makeOptions, handleHttpErrors, fetcher } from "../utils/fetchUtils";
 
 function searchFacade(){
 
-    const search = (action, setError, input) => {
+    const search = (setter, setError, input) => {
         const options = makeOptions("GET", true);
-        return fetcher(URL + "/api/search/"+ input, options, action, setError);
+        return fetcher(URL + "/api/search/"+ input, options, (data) => setter({...data}), setError);
       };
 
     return { search }

@@ -5,6 +5,7 @@ import {Navbar} from './components/components'
 import { Profile, Signup, Login, Home, Search } from "./routes";
 import { getUserByJwt, setToken } from "./utils/token";
 import {loginMethod, logoutMethode} from './utils/loginUtils'
+import searchFacade from './facades/searchFacade'
 
 function App() {
   const init = { username: "", roles: [] };
@@ -12,7 +13,10 @@ function App() {
   const [user, setUser] = useState({...init});
   const login = (user, pass) => loginMethod(user, pass, setUser)
   const logout = () => logoutMethode(setUser, init)
-  const [searchInput, setSearchInput] = useState("") 
+
+  const [searchInput, setSearchInput] = useState("")
+  const [searchResult, setSearchResult] = useState({})
+  const search = () => searchFacade.search(setSearchResult, setError, searchInput)
 
 
 
@@ -26,7 +30,7 @@ function App() {
   return (
     <>
       <Router>
-        <Navbar user={user} logout={logout} setSearchInput={setSearchInput}/>
+        <Navbar search={search} user={user} logout={logout} setSearchInput={setSearchInput}/>
         <Switch>
           <Container fluid>
             <Route path="/" exact>
@@ -40,7 +44,7 @@ function App() {
               <Login login={login} user={user} logout={logout} />
             </Route>
             <Route path="/search">
-              <Search searchInput={searchInput} setError={setError}/>
+              <Search searchResult={searchResult}/>
             </Route>
             <Route path="/signup">
               <Signup />

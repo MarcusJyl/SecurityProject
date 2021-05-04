@@ -3,6 +3,7 @@ package facades;
 import DTOs.UserDTO;
 import entities.Role;
 import entities.User;
+import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -87,6 +88,29 @@ public class UserFacade {
             System.out.println(e);
             return "";
         }
+    }
+
+    public void changePassword(String username, String newPassword, String oldPassword) throws AuthenticationException, InvalidInputException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            User user = this.getVeryfiedUser(username, oldPassword);
+            resetPassword(user, newPassword);
+        } catch (Exception e) {
+            throw new InvalidInputException("Wrong password for user: " + username);
+        }
+    }
+
+    private void resetPassword(User user, String newPassword) throws DatabaseException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            user.setUserPass(newPassword);
+            em.getTransaction().begin();
+            em.merge(user);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            throw new DatabaseException("Unable to change password in database try again later");
+        }
+
     }
 
 }

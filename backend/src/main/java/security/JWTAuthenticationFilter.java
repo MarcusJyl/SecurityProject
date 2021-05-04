@@ -50,7 +50,6 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
                 if (isJWTBlackListed(token, user.getName())) {
                     request.abortWith(errorhandling.GenericExceptionMapper.makeErrRes("Not authenticated - token is logged out", 403));
                 }
-                System.out.println(user.getName());
 
                 request.setSecurityContext(new JWTSecurityContext(user, request));
             } catch (AuthenticationException | ParseException | JOSEException ex) {

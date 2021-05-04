@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import entities.User;
 import errorhandling.InvalidInputException;
 import facades.UserFacade;
@@ -17,10 +18,12 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import security.UserPrincipal;
+import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
 
 /**
@@ -82,7 +85,7 @@ public class UserResource {
         String thisuser = securityContext.getUserPrincipal().getName();
         String link = GSON.fromJson(body, JsonObject.class).get("url").toString();
         System.out.println("LINK: " + link);
-        return facade.setProfileImageLink(thisuser, link.substring(1,link.length()-1));
+        return facade.setProfileImageLink(thisuser, link.substring(1, link.length() - 1));
 
 //        return obj.toString();
     }
@@ -122,6 +125,21 @@ public class UserResource {
         obj.add("roles", array);
 
         return obj.toString();
+    }
+
+    @PUT
+    @Path("password")
+    @RolesAllowed({"user", "admin"})
+    public String changePassword(String body) throws AuthenticationException, InvalidInputException {
+        String username = securityContext.getUserPrincipal().getName();
+        JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+
+        String oldPassword = json.get("oldPassword").getAsString();
+        String newPassword = json.get("newPassword").getAsString();
+
+        facade.changePassword(username, newPassword, oldPassword);
+
+        return "Password changed";
     }
 
 }
