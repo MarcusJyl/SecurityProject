@@ -9,12 +9,15 @@ export default function Comments({ setError, postID }) {
     const [comments, setComments] = useState([])
 
     useEffect(async () => {
-        const data = await facade.getAllCommentsForAPost(data => data, setError, postID)
-        if (data) {
+        let commentsData = await facade.getAllCommentsForAPost(data => data, setError, postID)
+        if (commentsData) {
             let usernames = []
-            data.all.forEach(d => {if(!usernames.includes(d.username)) usernames.push(d.username)})
-            const commenters = await userFacade.getUsersByIDs(data => data, setError, usernames)
-            setComments([...data.all])
+            commentsData.all.forEach(d => { if (!usernames.includes(d.username)) usernames.push(d.username) })
+            let users = await userFacade.getUsersByIDs(data => data, setError, usernames)
+
+            commentsData = commentsData.all.map(comment => { return { ...comment, user: users.all.find(e => e.username === comment.username) } })
+
+            setComments([...commentsData])
         }
     }, [])
 
@@ -23,10 +26,12 @@ export default function Comments({ setError, postID }) {
 
             {comments.map(c => {
                 return (
-                    <Row className="w-100 mt-2">
-                        <Col md={2}></Col>
+                    <Row className="w-100 mt-2" style={{ borderBottom: 1 + 'px solid black' }}>
+                        <Col md={2}>
+                            <p>{c.user.username}</p>
+                        </Col>
                         <Col>
-                            <p style={{ border: 1 + 'px solid black' }}>{c.text}</p>
+                            <p >{c.text}</p>
 
                         </Col>
                     </Row>

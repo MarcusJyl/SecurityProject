@@ -17,9 +17,9 @@ public class UserDTO {
     private String username;
     private String password;
     private List<String> roles;
-    
+    private String profilePicture;
 
-    public UserDTO(String name, String password, List<String> roles ) {
+    public UserDTO(String name, String password, List<String> roles) {
         this.username = name;
         this.roles = roles;
         this.password = password;
@@ -28,6 +28,7 @@ public class UserDTO {
     public UserDTO(User user) {
         this.username = user.getUserName();
         this.roles = user.getRolesAsStrings();
+        this.profilePicture = user.getLinkToProfileImg();
     }
 
     public String getName() {
