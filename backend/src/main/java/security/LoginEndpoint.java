@@ -39,7 +39,6 @@ public class LoginEndpoint {
   @Produces(MediaType.APPLICATION_JSON)
   public Response login(String jsonString) throws AuthenticationException {
     JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-      System.out.println(json);
     String username = json.get("username").getAsString();
     String password = json.get("password").getAsString();
 
@@ -83,6 +82,5 @@ public class LoginEndpoint {
     SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
     signedJWT.sign(signer);
     return signedJWT.serialize();
-
-  }
+        }
 }

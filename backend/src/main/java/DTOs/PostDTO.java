@@ -36,6 +36,7 @@ public class PostDTO {
         this.id = post.getId();
         this.likes = 0;
         this.profileImg = post.getUser().getLinkToProfileImg();
+        this.tags = post.getTagsAsStrings();
     }
 
     public String getUsername() {

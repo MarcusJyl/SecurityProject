@@ -88,7 +88,6 @@ public class UserResource {
     public String profilPic(String body) throws InvalidInputException {
         String thisuser = securityContext.getUserPrincipal().getName();
         String link = GSON.fromJson(body, JsonObject.class).get("url").toString();
-        System.out.println("LINK: " + link);
         return facade.setProfileImageLink(thisuser, link.substring(1, link.length() - 1));
 
 //        return obj.toString();
@@ -151,7 +150,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getUSersByIDs(@PathParam("usernames") String usernamesInput) throws AuthenticationException, InvalidInputException, NotFoundException {
         EntityManager em = EMF.createEntityManager();
-        System.out.println(usernamesInput);
+
         String[] usernames = usernamesInput.split(",");
         List<User> users = new ArrayList();
 
@@ -165,7 +164,7 @@ public class UserResource {
         }
         
         UsersDTO usersDTO = new UsersDTO(users);
-        System.out.println(usersDTO);
+
 
         return GSON.toJson(usersDTO);
     }

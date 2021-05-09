@@ -97,7 +97,6 @@ public class CommentResource {
 
         try {
             Post post = em.find(Post.class, postID);
-            System.out.println(post.getId());
             Comment comment = new Comment(post, text, user);
             em.getTransaction().begin();
             em.persist(comment);

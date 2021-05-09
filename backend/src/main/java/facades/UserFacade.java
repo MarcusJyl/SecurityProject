@@ -85,7 +85,6 @@ public class UserFacade {
 
             return "DOne";
         } catch (Exception e) {
-            System.out.println(e);
             return "";
         }
     }

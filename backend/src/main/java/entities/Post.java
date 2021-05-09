@@ -82,6 +82,14 @@ public class Post implements Serializable {
         this.tagList.add(tag);
         tag.addPost(this);
     }
+    
+    public  List<String> getTagsAsStrings(){
+        List<String> tagStrings = new ArrayList();
+        for (Tag tag : this.tagList) {
+            tagStrings.add(tag.getTagName());
+        }
+        return tagStrings;
+    }
 
     public void addComment(Comment comment) {
         comments.add(comment);

@@ -105,13 +105,13 @@ public class PostResource {
         String username = securityContext.getUserPrincipal().getName();
         EntityManager em = EMF.createEntityManager();
 
-//        try {
+        try {
             User user = em.find(User.class, username);
             PostDTO post = new PostDTO(facade.addPost(dto, user, tags));
             return GSON.toJson(post);
-//        } catch (Exception ex) {
-//            throw new InvalidInputException("Invalid Input");
-//        }
+        } catch (Exception ex) {
+            throw new InvalidInputException("Invalid Input");
+        }
     }
 
     @GET

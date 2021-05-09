@@ -49,12 +49,13 @@ public class PostFacade {
         List<Tag> tags = tagFacade.getTags(tagStrings);
         em.getTransaction().begin();
         Post post = new Post(user, dto.getTitle(), dto.getContent());
-        
+
         em.persist(post);
         for (Tag tag : tags) {
             post.addTag(tag);
             em.merge(tag);
         }
+        em.merge(post);
         em.getTransaction().commit();
         return post;
     }
