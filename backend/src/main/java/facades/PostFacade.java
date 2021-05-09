@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -65,6 +66,25 @@ public class PostFacade {
 
         PostsDTO dtos = new PostsDTO(em.createQuery("SELECT p FROM Post p").getResultList());
 
+        return dtos;
+    }
+
+    public PostsDTO getAllPostsByTags(String[] tagsStrings) {
+        EntityManager em = emf.createEntityManager();
+
+        TypedQuery<Tag> query = em.createQuery(
+                "SELECT t FROM Tag t WHERE t.tagName IN :numbers", Tag.class);
+
+        List<String> empNumbers = Arrays.asList(tagsStrings);
+        List<Tag> tags = query.setParameter("numbers", empNumbers).getResultList();
+
+        List<Post> posts = new ArrayList();
+        for (Tag tag : tags) {
+            for (Post post : tag.getPostList()) {
+                posts.add(post);
+            }
+        }
+        PostsDTO dtos = new PostsDTO(posts);
         return dtos;
     }
 

@@ -52,4 +52,10 @@ public class Tag implements Serializable {
         return tagName;
     }
 
+    public List<Post> getPostList() {
+        return postList;
+    }
+    
+    
+
 }

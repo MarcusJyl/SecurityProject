@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Col, Container, Jumbotron, Row } from 'react-bootstrap'
-import { Content, Header, UserInfo, Footer, Comments } from './components/components'
+import { Content, Header, UserInfo, Footer, Comments, Tags } from './components/components'
 
-export default function Post({ post, setError }) {
+export default function Post({ post, setError, setSelectedTag }) {
  
-  const { title, content, username, profileImg, id } = post
+  const { title, content, username, profileImg, id, tags } = post
   const [showComments, setShowComments] = useState(false)
 
   return (
@@ -15,6 +15,7 @@ export default function Post({ post, setError }) {
           <Container fluid className="p-0 m-0">
             <Row><Header text={title} /></Row>
             <Row className="w-100"><Content text={content} /></Row>
+            <Row className="w-100"><Tags tags={tags} setSelectedTag={setSelectedTag} /></Row>
           </Container>
           <Row className="pb-2"><Footer setShowComments={setShowComments} setError={setError} postID={id}/></Row>
         </Col>

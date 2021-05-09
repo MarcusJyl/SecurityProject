@@ -76,7 +76,7 @@ public class PostResource {
 
     @Context
     private UriInfo context;
-    
+
     @Context
     SecurityContext securityContext;
 
@@ -99,9 +99,9 @@ public class PostResource {
         String content = json.get("content").getAsString();
         String title = json.get("title").getAsString();
         List<String> tags = Arrays.asList(json.get("tag").toString().replaceAll("[\\[\\]\"]", "").split(","));
-        
+
         PostDTO dto = new PostDTO(title, content, tags);
-        
+
         String username = securityContext.getUserPrincipal().getName();
         EntityManager em = EMF.createEntityManager();
 
@@ -131,6 +131,13 @@ public class PostResource {
         } catch (JsonSyntaxException e) {
             return e.getMessage();
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("by/tags/{tags}")
+    public String getPostByTag(@PathParam("tags") String tags) {
+        return GSON.toJson(facade.getAllPostsByTags(tags.split(",")));
     }
 
     private UserPrincipal getUserPrincipalFromTokenIfValid(String token)

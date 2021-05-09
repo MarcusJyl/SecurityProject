@@ -3,6 +3,11 @@ import { makeOptions, handleHttpErrors, fetcher } from "../utils/fetchUtils";
 
 
 function postFacade() {
+  const getAllPostsWithTags = (action,tags, setError) => {
+    const options = makeOptions("GET", true);
+    return fetcher(URL + "/api/post/by/tags/" + tags, options, action, setError);
+  };
+
   const getAllPosts = (action, setError) => {
     const options = makeOptions("GET", true);
     return fetcher(URL + "/api/post/all", options, action, setError);
@@ -23,7 +28,7 @@ function postFacade() {
     return fetcher(URL + "/api/post", options, action, setError);
   }
 
-  return { getAllPosts, addPost, getAllCommentsForAPost, addComment };
+  return { getAllPosts, addPost, getAllCommentsForAPost, addComment, getAllPostsWithTags };
 }
 const facade = postFacade();
 export default facade;
