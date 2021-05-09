@@ -6,6 +6,8 @@
 package DTOs;
 
 import entities.Post;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,12 +17,14 @@ public class PostDTO {
 
     private String title;
     private String content;
+    private List<String> tags = new ArrayList();
     private String username;
     private int id;
     private int likes;
     private String profileImg;
 
-    public PostDTO(String title, String content) {
+    public PostDTO(String title, String content, List<String> tags) {
+        this.tags = tags;
         this.title = title;
         this.content = content;
     }
@@ -57,4 +61,38 @@ public class PostDTO {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public String getProfileImg() {
+        return profileImg;
+    }
+
+    public void setProfileImg(String profileImg) {
+        this.profileImg = profileImg;
+    }
+    
+    
 }

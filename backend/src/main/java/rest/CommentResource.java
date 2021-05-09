@@ -97,12 +97,12 @@ public class CommentResource {
 
         try {
             Post post = em.find(Post.class, postID);
-            System.out.println(post.toString());
+            System.out.println(post.getId());
             Comment comment = new Comment(post, text, user);
             em.getTransaction().begin();
             em.persist(comment);
             em.persist(post);
-            em.persist(user);
+            em.merge(user);
             em.getTransaction().commit();
 
             return GSON.toJson(postID);
@@ -113,7 +113,7 @@ public class CommentResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+
     @Path("{postID}")
     public String getCommetForPost(@PathParam("postID") String postID) throws InvalidInputException {
         EntityManager em = EMF.createEntityManager();

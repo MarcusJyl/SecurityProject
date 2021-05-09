@@ -149,7 +149,6 @@ public class UserResource {
     @GET
     @Path("by/usernames/{usernames}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"user", "admin"})
     public String getUSersByIDs(@PathParam("usernames") String usernamesInput) throws AuthenticationException, InvalidInputException, NotFoundException {
         EntityManager em = EMF.createEntityManager();
         System.out.println(usernamesInput);

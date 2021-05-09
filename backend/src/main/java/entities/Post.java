@@ -8,12 +8,15 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -39,7 +42,7 @@ public class Post implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "post")
-    private List<Comment> comments  = new ArrayList();
+    private List<Comment> comments = new ArrayList();
 
     @Size(min = 1, max = 40)
     @Column(name = "title")
@@ -51,10 +54,16 @@ public class Post implements Serializable {
 
     @OneToMany(mappedBy = "post")
     private List<Like> likes;
-    
+
     @Column(name = "img_link")
     @Size(max = 255)
     private String link;
+
+    @JoinTable(name = "posts_tags", joinColumns = {
+        @JoinColumn(name = "post_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "tag_name", referencedColumnName = "tag_name")})
+    @ManyToMany
+    private List<Tag> tagList = new ArrayList<>();
 
     public Post() {
     }
@@ -69,11 +78,15 @@ public class Post implements Serializable {
         return user;
     }
 
-        
-    public void addComment(Comment comment){
+    public void addTag(Tag tag) {
+        this.tagList.add(tag);
+        tag.addPost(this);
+    }
+
+    public void addComment(Comment comment) {
         comments.add(comment);
     }
-    
+
     public void setUser(User user) {
         this.user = user;
     }

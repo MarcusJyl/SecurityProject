@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
@@ -23,6 +24,7 @@ import entities.Post;
 import entities.User;
 import errorhandling.InvalidInputException;
 import facades.PostFacade;
+import facades.TagFacade;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,6 +50,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
@@ -55,6 +59,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -71,6 +76,9 @@ public class PostResource {
 
     @Context
     private UriInfo context;
+    
+    @Context
+    SecurityContext securityContext;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -85,25 +93,25 @@ public class PostResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("{admin, user}")
-    public String addPost(String postString,
-            @HeaderParam("x-access-token") String token) throws ParseException, AuthenticationException {
-        PostDTO dto = GSON.fromJson(postString, PostDTO.class
-        );
+    @RolesAllowed({"admin", "user"})
+    public String addPost(String postString) throws ParseException, AuthenticationException, InvalidInputException {
+        JsonObject json = JsonParser.parseString(postString).getAsJsonObject();
+        String content = json.get("content").getAsString();
+        String title = json.get("title").getAsString();
+        List<String> tags = Arrays.asList(json.get("tag").toString().replaceAll("[\\[\\]\"]", "").split(","));
+        
+        PostDTO dto = new PostDTO(title, content, tags);
+        
+        String username = securityContext.getUserPrincipal().getName();
         EntityManager em = EMF.createEntityManager();
 
-        try {
-            UserPrincipal userPrincipal = getUserPrincipalFromTokenIfValid(token);
-            User user = em.find(User.class,
-                    userPrincipal.getName());
-            PostDTO post = new PostDTO(facade.addPost(dto, user));
+//        try {
+            User user = em.find(User.class, username);
+            PostDTO post = new PostDTO(facade.addPost(dto, user, tags));
             return GSON.toJson(post);
-        } catch (AuthenticationException | ParseException | JOSEException ex) {
-            if (ex instanceof AuthenticationException) {
-                throw (AuthenticationException) ex;
-            }
-        }
-        return null;
+//        } catch (Exception ex) {
+//            throw new InvalidInputException("Invalid Input");
+//        }
     }
 
     @GET

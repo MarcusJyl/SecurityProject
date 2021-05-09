@@ -10,6 +10,7 @@ import DTOs.PostsDTO;
 import DTOs.UserDTO;
 import com.google.gson.Gson;
 import entities.Post;
+import entities.Tag;
 import entities.User;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -28,55 +29,57 @@ import javax.persistence.TypedQuery;
  * @author marcg
  */
 public class PostFacade {
-    
+
     private static EntityManagerFactory emf;
     private static PostFacade instance;
+    private static TagFacade tagFacade;
 
     public static PostFacade getUserFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
             instance = new PostFacade();
+            tagFacade = TagFacade.getTagFacade(_emf);
         }
         return instance;
     }
-    
-    
-    public Post addPost(PostDTO dto, User user){
+
+    public Post addPost(PostDTO dto, User user, List<String> tagStrings) {
         EntityManager em = emf.createEntityManager();
 
+        List<Tag> tags = tagFacade.getTags(tagStrings);
         em.getTransaction().begin();
         Post post = new Post(user, dto.getTitle(), dto.getContent());
-        em.persist(post);
-        em.getTransaction().commit();
         
+        em.persist(post);
+        for (Tag tag : tags) {
+            post.addTag(tag);
+            em.merge(tag);
+        }
+        em.getTransaction().commit();
         return post;
     }
-    
-    public PostsDTO getAllPosts(){
+
+    public PostsDTO getAllPosts() {
         EntityManager em = emf.createEntityManager();
-        
+
         PostsDTO dtos = new PostsDTO(em.createQuery("SELECT p FROM Post p").getResultList());
-        
+
         return dtos;
     }
-    
-    public PostsDTO getAllPostsFromUser(String userDTO){
+
+    public PostsDTO getAllPostsFromUser(String userDTO) {
         EntityManager em = emf.createEntityManager();
         ArrayList<PostsDTO> results = new ArrayList();
-        try{
+        try {
             TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user.userName = :name", entities.Post.class);
             query.setParameter("name", userDTO);
             List<Post> posts = query.getResultList();
             PostsDTO postsDTO = new PostsDTO(posts);
 
             return postsDTO;
-        }   finally{
+        } finally {
             em.close();
         }
     }
 
-    
-    }
-    
-    
-
+}
