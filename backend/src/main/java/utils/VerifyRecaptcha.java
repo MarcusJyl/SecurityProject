@@ -16,7 +16,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class VerifyRecaptcha {
 
 	public static final String url = "https://www.google.com/recaptcha/api/siteverify";
-	public static final String secret = "6Lc6S84aAAAAAOdAow9_vIdC6ah563IjyDSvoaes";
+	public static final String secret = Env.recaptchaSecret;
 	private final static String USER_AGENT = "Mozilla/5.0";
 
 	public static boolean verify(String gRecaptchaResponse, String ip) throws IOException {
