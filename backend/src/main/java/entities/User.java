@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.mindrot.jbcrypt.BCrypt;
+import utils.Env;
 
 @Entity
 @Table(name = "users")
@@ -72,7 +74,7 @@ public class User implements Serializable {
   public User(String userName, String userPass) {
     this.userName = userName;
 
-    this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+      setUserPass(userPass);
   }
 
 
@@ -89,7 +91,7 @@ public class User implements Serializable {
   }
 
   public void setUserPass(String userPass) {
-    this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+    this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt(6));
   }
 
   public List<Role> getRoleList() {

@@ -26,7 +26,7 @@ function NavbarShow({ user, logout, setSearchInput, search }) {
         </Nav>
         <input id="searchInput" type="text" placeholder="search" onChange={onChange}onKeyDown={evt => {if(evt.which == 13 || evt.keyCode == 13)search()}}></input>
         <Link to="/search">
-              <button onClick={search} className="btn btn-primary" id="searchButton">Search</button>
+              <button onClick={search} className="btn btn-primary mr-1 ml-1" id="searchButton">Search</button>
         </Link>
         <Nav>
           {user.username !== "" ? (

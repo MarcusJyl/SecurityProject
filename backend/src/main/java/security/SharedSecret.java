@@ -1,6 +1,7 @@
 package security;
 
 import java.security.SecureRandom;
+import utils.Env;
 
 /* This generates a secure random per execution of the server
  * A server restart, will generate a new key, making all existing tokens invalid
@@ -16,10 +17,10 @@ public class SharedSecret {
         System.out.println("****      See security.SharedSecret        *******");
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        */
+      */
         //REMOVE BEFORE PRODUCTION
         if(true){
-            return "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".getBytes();
+            return Env.secret.getBytes();
         }
         if (secret == null) {  //Or better read as an environment variable set on production server
             secret = new byte[32];

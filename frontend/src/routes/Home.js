@@ -19,7 +19,11 @@ export default function Home({ setError }) {
   }, [])
 
   useEffect(() => {
-    postFacade.getAllPostsWithTags(({ all }) => setPosts([...all.reverse()]), selectedTag, setError)
+    if(selectedTag === ""){
+      postFacade.getAllPosts(({ all }) => { setPosts([...all.reverse()])}, setError)
+    } else {
+      postFacade.getAllPostsWithTags(({ all }) => setPosts([...all.reverse()]), selectedTag, setError)
+    }
     setTitle(selectedTag)
   }, [selectedTag])
 

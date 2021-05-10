@@ -46,9 +46,9 @@ public class TagFacade {
     public List<Tag> getTags(List<String> strings) {
         List<Tag> tags = new ArrayList();
         for (String string : strings) {
-            Tag tag = getTagIfExist(string);
+            Tag tag = getTagIfExist(string.toLowerCase());
             if (!(tag instanceof Tag)) {
-                tag = addTag(string);
+                tag = addTag(string.toLowerCase());
             } 
             tags.add(tag);
         }
