@@ -1,4 +1,4 @@
-import { getToken } from "./token";
+import { getToken, getRecaptcha } from "./token";
 
 export function handleHttpErrors(res) {
   if (!res.ok) {
@@ -17,6 +17,9 @@ export const makeOptions = (method, addToken, body) => {
   };
   if (addToken && getToken()) {
     opts.headers["x-access-token"] = getToken();
+  }
+  if(getRecaptcha()){
+    opts.headers["g-recaptcha-response"] = getRecaptcha()
   }
   if (body) {
     opts.body = JSON.stringify(body);

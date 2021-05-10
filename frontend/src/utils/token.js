@@ -21,6 +21,10 @@ export const setToken = (token) => {
   localStorage.setItem("jwtToken", token);
 };
 
+export const getRecaptcha = () => {
+  return localStorage.getItem("_grecaptcha");
+};
+
 export function getUserByJwt() {
   if (getToken()) {
   console.log(getToken())

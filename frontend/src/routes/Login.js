@@ -19,7 +19,9 @@ function LoginDisplay({ login, user, logout }) {
       [evt.target.id]: evt.target.value,
     });
   };
-  const onChange1 = () => {
+  const onChange1 = (val) => {
+    localStorage.setItem("_grecaptcha", val)
+    console.log(val)
     setEnableButton(false);
   };
 
@@ -44,7 +46,7 @@ function LoginDisplay({ login, user, logout }) {
                   placeholder="Enter Password"
                 />
                 <ReCAPTCHA
-                  sitekey="6Lfg8Z8aAAAAAMO7v3r1E-zIFfkvRQOkeH5X9MwX"
+                  sitekey="6Lc6S84aAAAAALQlClqEHcQHSQoE2T7rHpA4H4QH"
                   onChange={onChange1}
                 />
                 <button className="btn btn-primary m-2" onClick={performLogin} disabled={enableButton}>
