@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import utils.HttpUtils;
 import DTOs.QuoteDTO;
+import errorhandling.InvalidInputException;
+import utils.InputValidator;
 
 /**
  *
@@ -31,7 +33,9 @@ public class QuoteResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getQuote() throws IOException {
+    public String getQuote() throws IOException, InvalidInputException {
+        System.out.println("dasdasdadas");
+        System.out.println(InputValidator.validateInput("<scr" + "\uFDEF" + "ipt>", 0, 0));
         String quote = HttpUtils.fetchData("https://api.kanye.rest\n");
         QuoteDTO quoteDTO = GSON.fromJson(quote, QuoteDTO.class);
 

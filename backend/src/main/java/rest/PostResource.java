@@ -62,6 +62,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import utils.InputValidator;
 
 /**
  *
@@ -95,11 +96,14 @@ public class PostResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"admin", "user"})
     public String addPost(String postString) throws ParseException, AuthenticationException, InvalidInputException {
-        JsonObject json = JsonParser.parseString(postString).getAsJsonObject();
-        String content = json.get("content").getAsString();
-        String title = json.get("title").getAsString();
-        List<String> tags = Arrays.asList(json.get("tag").toString().replaceAll("[\\[\\]\"]", "").split(","));
 
+        JsonObject json = JsonParser.parseString(postString).getAsJsonObject();
+        String content = InputValidator.validateInput(json.get("content").getAsString(),1,255);
+        String title = InputValidator.validateInput(json.get("title").getAsString(),1,40);
+        List<String> tags = Arrays.asList(json.get("tag").toString().replaceAll("[\\[\\]\"]", "").split(","));
+        for (String tag : tags) {
+            InputValidator.validateInput(tag,1,25);
+        }
         PostDTO dto = new PostDTO(title, content, tags);
 
         String username = securityContext.getUserPrincipal().getName();
