@@ -6,18 +6,9 @@
 package rest;
 
 import DTOs.CommentsDTO;
-import DTOs.PostDTO;
-import DTOs.QuoteDTO;
-import DTOs.UserDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.SignedJWT;
 import entities.Comment;
 import entities.Post;
 import entities.User;
@@ -25,48 +16,24 @@ import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
 import facades.PostFacade;
 import facades.UserFacade;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.ParseException;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import security.SharedSecret;
-import security.UserPrincipal;
-import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
-import utils.HttpUtils;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import utils.InputValidator;
 
-/**
- *
- * @author marcg
- */
 @Path("comment")
 public class CommentResource {
 
@@ -93,7 +60,7 @@ public class CommentResource {
 
         JsonObject bodyObj = GSON.fromJson(body, JsonObject.class);
         int postID = bodyObj.get("post").getAsInt();
-        String text = bodyObj.get("text").getAsString();
+        String text = InputValidator.validateInput(bodyObj.get("text").getAsString(),1,255);
 
         try {
             Post post = em.find(Post.class, postID);

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import entities.User;
 import errorhandling.InvalidInputException;
 import facades.UserFacade;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import security.UserPrincipal;
 import utils.EMF_Creator;
+import utils.InputValidator;
 
 /**
  * @author lam@cphbusiness.dk
@@ -51,9 +53,13 @@ public class SignupEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String make(String user) throws InvalidInputException {
+        JsonObject json = JsonParser.parseString(user).getAsJsonObject();
+        String username = InputValidator.validateInput(json.get("username").getAsString(), 1, 25);
+        String password = InputValidator.validateInput(json.get("password").getAsString(), 8, 64);
+
         List<String> roles = new ArrayList();
         roles.add("user");
-        UserDTO userDTO = GSON.fromJson(user, UserDTO.class);
+        UserDTO userDTO = new UserDTO(username, password, roles);
         userDTO = new UserDTO(userDTO.getName(), userDTO.getPassword(), roles);
         userDTO = FACADE.addUser(userDTO);
 

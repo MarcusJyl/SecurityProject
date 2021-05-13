@@ -40,6 +40,7 @@ public class SearchResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{input}")
     public String Search(@PathParam("input")String input) throws InvalidInputException {
+        //Skal ikke validers da længden er lige meget og der ikke skere noget ved at få html <> ind
         return GSON.toJson(facade.Search(input));
     }
 }

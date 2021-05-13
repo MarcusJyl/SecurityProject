@@ -7,7 +7,6 @@ package rest;
 
 import DTOs.PostDTO;
 import DTOs.PostsDTO;
-import DTOs.QuoteDTO;
 import DTOs.UserDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -81,16 +80,6 @@ public class PostResource {
     @Context
     SecurityContext securityContext;
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("admin")
-    public String getQuote() throws IOException {
-        String quote = HttpUtils.fetchData("https://api.kanye.rest\n");
-        QuoteDTO quoteDTO = GSON.fromJson(quote, QuoteDTO.class);
-
-        return GSON.toJson(quoteDTO);
-    }
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -104,8 +93,8 @@ public class PostResource {
         for (String tag : tags) {
             InputValidator.validateInput(tag,1,25);
         }
+        
         PostDTO dto = new PostDTO(title, content, tags);
-
         String username = securityContext.getUserPrincipal().getName();
         EntityManager em = EMF.createEntityManager();
 
@@ -128,9 +117,10 @@ public class PostResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{userName}")
-    public String getUserPost(@PathParam("userName") String userDTO) {
+    public String getUserPost(@PathParam("userName") String username) throws InvalidInputException {
+        username = InputValidator.validateInput(username, 1, 25);
         try {
-            PostsDTO posts = facade.getAllPostsFromUser(userDTO);
+            PostsDTO posts = facade.getAllPostsFromUser(username);
             return GSON.toJson(posts);
         } catch (JsonSyntaxException e) {
             return e.getMessage();
@@ -140,26 +130,30 @@ public class PostResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("by/tags/{tags}")
-    public String getPostByTag(@PathParam("tags") String tags) {
-        return GSON.toJson(facade.getAllPostsByTags(tags.split(",")));
-    }
-
-    private UserPrincipal getUserPrincipalFromTokenIfValid(String token)
-            throws ParseException, JOSEException, AuthenticationException {
-        SignedJWT signedJWT = SignedJWT.parse(token);
-        //Is it a valid token (generated with our shared key)
-        JWSVerifier verifier = new MACVerifier(SharedSecret.getSharedKey());
-
-        if (signedJWT.verify(verifier)) {
-            String roles = signedJWT.getJWTClaimsSet().getClaim("roles").toString();
-            String username = signedJWT.getJWTClaimsSet().getClaim("username").toString();
-
-            String[] rolesArray = roles.split(",");
-
-            return new UserPrincipal(username, rolesArray);
-//     return new UserPrincipal(username, roles);
-        } else {
-            throw new JOSEException("User could not be extracted from token");
+    public String getPostByTag(@PathParam("tags") String tagString) throws InvalidInputException {
+        String[] tags = tagString.split(",");
+        for (String tag : tags) {
+            InputValidator.validateInput(tag, 1, 25);
         }
+        return GSON.toJson(facade.getAllPostsByTags(tags));
     }
+
+//    private UserPrincipal getUserPrincipalFromTokenIfValid(String token)
+//            throws ParseException, JOSEException, AuthenticationException {
+//        SignedJWT signedJWT = SignedJWT.parse(token);
+//        //Is it a valid token (generated with our shared key)
+//        JWSVerifier verifier = new MACVerifier(SharedSecret.getSharedKey());
+//
+//        if (signedJWT.verify(verifier)) {
+//            String roles = signedJWT.getJWTClaimsSet().getClaim("roles").toString();
+//            String username = signedJWT.getJWTClaimsSet().getClaim("username").toString();
+//
+//            String[] rolesArray = roles.split(",");
+//
+//            return new UserPrincipal(username, rolesArray);
+////     return new UserPrincipal(username, roles);
+//        } else {
+//            throw new JOSEException("User could not be extracted from token");
+//        }
+//    }
 }

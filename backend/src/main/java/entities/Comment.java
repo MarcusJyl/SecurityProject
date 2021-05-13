@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -41,6 +42,7 @@ public class Comment implements Serializable {
 
     @NotNull
     @Column(name = "text")
+    @Size(min = 1, max = 255)
     private String text;
 
     public Comment(Post post, String text, User user) {

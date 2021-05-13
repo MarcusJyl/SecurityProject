@@ -29,6 +29,7 @@ import javax.ws.rs.core.SecurityContext;
 import security.UserPrincipal;
 import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
+import utils.InputValidator;
 
 /**
  * @author lam@cphbusiness.dk
@@ -62,23 +63,23 @@ public class UserResource {
         }
     }
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String make() {
-        String thisuser = securityContext.getUserPrincipal().getName();
-        JsonObject obj = new JsonObject();
-        obj.addProperty("name", thisuser);
-        JsonArray array = new JsonArray();
-        array.add("user");
-        boolean s = securityContext.isUserInRole("admin");
-        if (s) {
-            array.add("admin");
-        }
-        obj.add("roles", array);
-
-        return obj.toString();
-    }
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public String make() {
+//        String thisuser = securityContext.getUserPrincipal().getName();
+//        JsonObject obj = new JsonObject();
+//        obj.addProperty("name", thisuser);
+//        JsonArray array = new JsonArray();
+//        array.add("user");
+//        boolean s = securityContext.isUserInRole("admin");
+//        if (s) {
+//            array.add("admin");
+//        }
+//        obj.add("roles", array);
+//
+//        return obj.toString();
+//    }
 
     @POST
     @Path("picture")
@@ -87,10 +88,9 @@ public class UserResource {
     @RolesAllowed({"user", "admin"})
     public String profilPic(String body) throws InvalidInputException {
         String thisuser = securityContext.getUserPrincipal().getName();
-        String link = GSON.fromJson(body, JsonObject.class).get("url").toString();
+        String link = InputValidator.validateInput(GSON.fromJson(body, JsonObject.class).get("url").toString(),30,1500);
         return facade.setProfileImageLink(thisuser, link.substring(1, link.length() - 1));
 
-//        return obj.toString();
     }
 
     @GET
@@ -137,8 +137,8 @@ public class UserResource {
         String username = securityContext.getUserPrincipal().getName();
         JsonObject json = JsonParser.parseString(body).getAsJsonObject();
 
-        String oldPassword = json.get("oldPassword").getAsString();
-        String newPassword = json.get("newPassword").getAsString();
+        String oldPassword = InputValidator.validateInput(json.get("oldPassword").getAsString(),8,64);
+        String newPassword = InputValidator.validateInput(json.get("newPassword").getAsString(),8,64);
 
         facade.changePassword(username, newPassword, oldPassword);
 
@@ -152,6 +152,9 @@ public class UserResource {
         EntityManager em = EMF.createEntityManager();
 
         String[] usernames = usernamesInput.split(",");
+        for (String username : usernames) {
+            InputValidator.validateInput(username, 1, 25);
+        }
         List<User> users = new ArrayList();
 
         try {
