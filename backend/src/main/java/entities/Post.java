@@ -64,6 +64,9 @@ public class Post implements Serializable {
         @JoinColumn(name = "tag_name", referencedColumnName = "tag_name")})
     @ManyToMany
     private List<Tag> tagList = new ArrayList<>();
+    
+    @Column(name = "is_hidden")
+    private boolean isHidden = false;
 
     public Post() {
     }
@@ -76,6 +79,14 @@ public class Post implements Serializable {
 
     public User getUser() {
         return user;
+    }
+
+    public boolean isIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 
     public void addTag(Tag tag) {

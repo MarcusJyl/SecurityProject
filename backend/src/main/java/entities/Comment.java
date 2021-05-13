@@ -45,6 +45,9 @@ public class Comment implements Serializable {
     @Size(min = 1, max = 255)
     private String text;
 
+    @Column(name = "is_hidden")
+    private boolean isHidden = false;
+
     public Comment(Post post, String text, User user) {
         this.post = post;
         post.addComment(this);
@@ -55,6 +58,14 @@ public class Comment implements Serializable {
     public Comment() {
     }
 
+    public boolean isIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
+    
     public Post getPost() {
         return post;
     }
@@ -86,6 +97,5 @@ public class Comment implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    
-    
+
 }

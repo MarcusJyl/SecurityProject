@@ -21,6 +21,7 @@ import com.nimbusds.jwt.SignedJWT;
 import entities.Comment;
 import entities.Post;
 import entities.User;
+import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
 import facades.PostFacade;
 import facades.TagFacade;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -87,13 +89,13 @@ public class PostResource {
     public String addPost(String postString) throws ParseException, AuthenticationException, InvalidInputException {
 
         JsonObject json = JsonParser.parseString(postString).getAsJsonObject();
-        String content = InputValidator.validateInput(json.get("content").getAsString(),1,255);
-        String title = InputValidator.validateInput(json.get("title").getAsString(),1,40);
+        String content = InputValidator.validateInput(json.get("content").getAsString(), 1, 255);
+        String title = InputValidator.validateInput(json.get("title").getAsString(), 1, 40);
         List<String> tags = Arrays.asList(json.get("tag").toString().replaceAll("[\\[\\]\"]", "").split(","));
         for (String tag : tags) {
-            InputValidator.validateInput(tag,1,25);
+            InputValidator.validateInput(tag, 1, 25);
         }
-        
+
         PostDTO dto = new PostDTO(title, content, tags);
         String username = securityContext.getUserPrincipal().getName();
         EntityManager em = EMF.createEntityManager();
@@ -136,6 +138,14 @@ public class PostResource {
             InputValidator.validateInput(tag, 1, 25);
         }
         return GSON.toJson(facade.getAllPostsByTags(tags));
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{postID}")
+    public String deletePost(@PathParam("postID") String postID) throws InvalidInputException, DatabaseException {
+        int id = Integer.parseInt(InputValidator.validateInput(postID, 1, 10000));
+        return GSON.toJson(facade.deletePost(id));
     }
 
 //    private UserPrincipal getUserPrincipalFromTokenIfValid(String token)
