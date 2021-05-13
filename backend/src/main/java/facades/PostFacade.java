@@ -109,17 +109,40 @@ public class PostFacade {
     public PostDTO deletePost(int postID) throws DatabaseException {
         EntityManager em = emf.createEntityManager();
 
-        try{
-        Post post = em.find(Post.class, postID);
-        post.setIsHidden(true);
+        try {
+            Post post = em.find(Post.class, postID);
+            post.setIsHidden(true);
 
-        em.getTransaction().begin();
-        em.merge(post);
-        em.getTransaction().commit();
-        return new PostDTO(post);
+            em.getTransaction().begin();
+            em.merge(post);
+            em.getTransaction().commit();
+            return new PostDTO(post);
         } catch (Exception e) {
             throw new DatabaseException("Unable to delete post try again");
         }
+    }
+
+    public PostDTO editPost(PostDTO dto) throws DatabaseException {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            Post post = em.find(Post.class, dto.getId());
+            post.setContent(dto.getContent());
+            post.setTitle(dto.getTitle());
+            post.setTagList(new ArrayList());
+            List<Tag> tags = tagFacade.getTags(dto.getTags());
+            for (Tag tag : tags) {
+                post.addTag(tag);
+                em.merge(tag);
+            }
+            em.getTransaction().begin();
+            em.merge(post);
+            em.getTransaction().commit();
+            return new PostDTO(post);
+        } catch (Exception e) {
+            throw new DatabaseException("Unable to edit post");
+        }
+
     }
 
 }

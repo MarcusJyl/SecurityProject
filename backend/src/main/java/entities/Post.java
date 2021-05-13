@@ -89,6 +89,14 @@ public class Post implements Serializable {
         this.isHidden = isHidden;
     }
 
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
+    }
+    
     public void addTag(Tag tag) {
         this.tagList.add(tag);
         tag.addPost(this);

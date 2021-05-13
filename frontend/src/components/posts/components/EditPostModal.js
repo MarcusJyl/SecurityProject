@@ -3,7 +3,7 @@ import { Modal, Button, Form, Row, Col } from 'react-bootstrap'
 import { fetcher, makeOptions } from '../../../utils/fetchUtils'
 import { URL as baseURL } from '../../../utils/settings'
 
-export default function Content({ selectedEditPost, setError }) {
+export default function Content ({ selectedEditPost, setError }) {
 
     const [show, setShow] = useState(false);
     const [post, setPost] = useState({})
@@ -13,7 +13,6 @@ export default function Content({ selectedEditPost, setError }) {
         if (Object.keys(selectedEditPost).length === 0) handleClose()
         else handleShow()
         setPost({ ...selectedEditPost })
-        console.log(selectedEditPost)
     }, [selectedEditPost])
 
     const handleClose = () => setShow(false);
@@ -34,8 +33,11 @@ export default function Content({ selectedEditPost, setError }) {
         else setPost({ ...post, [evt.target.id]: evt.target.value })
     }
 
-    const editPost = async() => {
-        const post = await fetcher(baseURL + '/api/post/' , makeOptions('PUT', true, post), (data) => data, setError)
+    const editPost = async(newPost) => {
+        console.log("asdasdasdas")
+        const test = {...newPost}
+        console.log(test)
+        const post = await fetcher(baseURL + '/api/post/' , makeOptions('PUT', true, {...newPost}), (data) => data, setError)
         handleClose()
     }
 
@@ -63,7 +65,7 @@ export default function Content({ selectedEditPost, setError }) {
                         </Row>
                     </Form.Group>
 
-                    <Button className="w-100 btn-secondary" onClick={editPost}>Edit Post</Button>
+                    <Button className="w-100 btn-secondary" onClick={() => editPost({...post})}>Edit Post</Button>
                 </Form>
             </Modal>
         </>

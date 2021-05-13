@@ -56,6 +56,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
@@ -146,6 +147,23 @@ public class PostResource {
     public String deletePost(@PathParam("postID") String postID) throws InvalidInputException, DatabaseException {
         int id = Integer.parseInt(InputValidator.validateInput(postID, 1, 10000));
         return GSON.toJson(facade.deletePost(id));
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    public String editPost(String body) throws InvalidInputException, DatabaseException {
+        JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+
+        String title = InputValidator.validateInput(json.get("title").getAsString(), 1, 40);
+        String id = InputValidator.validateInput(json.get("id").getAsString(), 1, 40);
+        String content = InputValidator.validateInput(json.get("content").getAsString(), 1, 255);
+        List<String> tags = Arrays.asList(json.get("tags").toString().replaceAll("[\\[\\]\"]", "").split(","));
+        for (String string : tags) {
+            InputValidator.validateInput(string, 1, 25);
+        }
+        PostDTO postDTO = new PostDTO(Integer.parseInt(id), title, content, tags);
+        
+        return GSON.toJson(facade.editPost(postDTO));
     }
 
 //    private UserPrincipal getUserPrincipalFromTokenIfValid(String token)
