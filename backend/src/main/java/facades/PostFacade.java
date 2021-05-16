@@ -12,7 +12,11 @@ import com.google.gson.Gson;
 import entities.Post;
 import entities.Tag;
 import entities.User;
+
 import errorhandling.NotFoundException;
+
+import errorhandling.DatabaseException;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,7 +69,7 @@ public class PostFacade {
     public PostsDTO getAllPosts() {
         EntityManager em = emf.createEntityManager();
 
-        PostsDTO dtos = new PostsDTO(em.createQuery("SELECT p FROM Post p").getResultList());
+        PostsDTO dtos = new PostsDTO(em.createQuery("SELECT p FROM Post p WHERE p.isHidden = 0").getResultList());
 
         return dtos;
     }
@@ -82,7 +86,9 @@ public class PostFacade {
         List<Post> posts = new ArrayList();
         for (Tag tag : tags) {
             for (Post post : tag.getPostList()) {
-                posts.add(post);
+                if (!post.isIsHidden()) {
+                    posts.add(post);
+                }
             }
         }
         PostsDTO dtos = new PostsDTO(posts);
@@ -93,7 +99,7 @@ public class PostFacade {
         EntityManager em = emf.createEntityManager();
         ArrayList<PostsDTO> results = new ArrayList();
         try {
-            TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user.userName = :name", entities.Post.class);
+            TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user.userName = :name AND p.isHidden = 0", entities.Post.class);
             query.setParameter("name", userDTO);
             List<Post> posts = query.getResultList();
             PostsDTO postsDTO = new PostsDTO(posts);
@@ -119,6 +125,45 @@ public class PostFacade {
             }
             return new PostDTO(post);
         }
+    }
+
+    public PostDTO deletePost(int postID) throws DatabaseException {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            Post post = em.find(Post.class, postID);
+            post.setIsHidden(true);
+
+            em.getTransaction().begin();
+            em.merge(post);
+            em.getTransaction().commit();
+            return new PostDTO(post);
+        } catch (Exception e) {
+            throw new DatabaseException("Unable to delete post try again");
+        }
+    }
+
+    public PostDTO editPost(PostDTO dto) throws DatabaseException {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            Post post = em.find(Post.class, dto.getId());
+            post.setContent(dto.getContent());
+            post.setTitle(dto.getTitle());
+            post.setTagList(new ArrayList());
+            List<Tag> tags = tagFacade.getTags(dto.getTags());
+            for (Tag tag : tags) {
+                post.addTag(tag);
+                em.merge(tag);
+            }
+            em.getTransaction().begin();
+            em.merge(post);
+            em.getTransaction().commit();
+            return new PostDTO(post);
+        } catch (Exception e) {
+            throw new DatabaseException("Unable to edit post");
+        }
+
     }
 
 }

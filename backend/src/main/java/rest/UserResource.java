@@ -1,5 +1,6 @@
 package rest;
 
+import DTOs.UserDTO;
 import DTOs.UsersDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -63,6 +64,19 @@ public class UserResource {
         }
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user","admin"})
+    public String getSelf() {
+        String username = securityContext.getUserPrincipal().getName();
+        EntityManager em = EMF.createEntityManager();
+        try {
+            return GSON.toJson(new UserDTO(em.find(User.class, username)));
+        } finally {
+            em.close();
+        }
+    }
+
 //    @POST
 //    @Produces(MediaType.APPLICATION_JSON)
 //    @Consumes(MediaType.APPLICATION_JSON)
@@ -80,7 +94,6 @@ public class UserResource {
 //
 //        return obj.toString();
 //    }
-
     @POST
     @Path("picture")
     @Produces(MediaType.APPLICATION_JSON)
@@ -88,7 +101,7 @@ public class UserResource {
     @RolesAllowed({"user", "admin"})
     public String profilPic(String body) throws InvalidInputException {
         String thisuser = securityContext.getUserPrincipal().getName();
-        String link = InputValidator.validateInput(GSON.fromJson(body, JsonObject.class).get("url").toString(),30,1500);
+        String link = InputValidator.validateInput(GSON.fromJson(body, JsonObject.class).get("url").toString(), 30, 1500);
         return facade.setProfileImageLink(thisuser, link.substring(1, link.length() - 1));
 
     }
@@ -96,6 +109,7 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user")
+    @Path("user")
     public String getFromUser() {
         String thisuser = securityContext.getUserPrincipal().getName();
         JsonObject obj = new JsonObject();
@@ -137,8 +151,8 @@ public class UserResource {
         String username = securityContext.getUserPrincipal().getName();
         JsonObject json = JsonParser.parseString(body).getAsJsonObject();
 
-        String oldPassword = InputValidator.validateInput(json.get("oldPassword").getAsString(),8,64);
-        String newPassword = InputValidator.validateInput(json.get("newPassword").getAsString(),8,64);
+        String oldPassword = InputValidator.validateInput(json.get("oldPassword").getAsString(), 8, 64);
+        String newPassword = InputValidator.validateInput(json.get("newPassword").getAsString(), 8, 64);
 
         facade.changePassword(username, newPassword, oldPassword);
 
@@ -165,9 +179,8 @@ public class UserResource {
         } catch (Exception e) {
             throw new NotFoundException("got an invalid user id");
         }
-        
-        UsersDTO usersDTO = new UsersDTO(users);
 
+        UsersDTO usersDTO = new UsersDTO(users);
 
         return GSON.toJson(usersDTO);
     }

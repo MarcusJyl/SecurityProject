@@ -23,7 +23,14 @@ public class PostDTO {
     private int likes;
     private String profileImg;
 
-    public PostDTO(String title, String content, List<String> tags) {
+    public PostDTO(int id, String title, String content, List<String> tags) {
+        this.id = id;
+        this.tags = tags;
+        this.title = title;
+        this.content = content;
+    }
+
+    public PostDTO( String title, String content, List<String> tags) {
         this.tags = tags;
         this.title = title;
         this.content = content;
@@ -94,6 +101,5 @@ public class PostDTO {
     public void setProfileImg(String profileImg) {
         this.profileImg = profileImg;
     }
-    
-    
+
 }

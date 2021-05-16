@@ -115,7 +115,7 @@ public class LoginEndpointTest {
         login("user", "test");
 
         given().contentType("application/json")
-                .header("x-access-token", securityToken).when().get("/user").then().statusCode(200);
+                .header("x-access-token", securityToken).when().get("/user/user").then().statusCode(200);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class LoginEndpointTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/user").then()
+                .get("/user/user").then()
                 .statusCode(200)
                 .body("name", equalTo("user"));
     }
@@ -161,7 +161,7 @@ public class LoginEndpointTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/user").then() //Call User endpoint as Admin
+                .get("/user/user").then() //Call User endpoint as Admin
                 .statusCode(401);
     }
 
@@ -185,7 +185,7 @@ public class LoginEndpointTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/user").then()
+                .get("/user/user").then()
                 .statusCode(200)
                 .body("name", equalTo("user_admin"));
     }
@@ -196,7 +196,7 @@ public class LoginEndpointTest {
         given()
                 .contentType("application/json")
                 .when()
-                .get("/user").then()
+                .get("/user/user").then()
                 .statusCode(403)
                 .body("code", equalTo(403))
                 .body("message", equalTo("Not authenticated - do login"));
@@ -208,7 +208,7 @@ public class LoginEndpointTest {
         given()
                 .contentType("application/json")
                 .when()
-                .get("/user").then()
+                .get("/user/user").then()
                 .statusCode(403)
                 .body("code", equalTo(403))
                 .body("message", equalTo("Not authenticated - do login"));

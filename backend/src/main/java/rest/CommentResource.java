@@ -14,6 +14,7 @@ import entities.Post;
 import entities.User;
 import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
+import facades.CommentFacade;
 import facades.PostFacade;
 import facades.UserFacade;
 import javax.annotation.security.RolesAllowed;
@@ -27,6 +28,7 @@ import utils.EMF_Creator;
 import java.util.List;
 import javax.persistence.Query;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -39,8 +41,7 @@ public class CommentResource {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-    private static final PostFacade facade = PostFacade.getUserFacade(EMF);
-    private static final UserFacade userFacade = UserFacade.getUserFacade(EMF);
+    private static final CommentFacade facade = CommentFacade.getCommentFacade(EMF);
 
     @Context
     private UriInfo context;
@@ -53,46 +54,28 @@ public class CommentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"user", "admin"})
     public String addComment(String body) throws InvalidInputException, DatabaseException {
-        EntityManager em = EMF.createEntityManager();
 
         String username = securityContext.getUserPrincipal().getName();
-        User user = userFacade.findUser(username);
 
         JsonObject bodyObj = GSON.fromJson(body, JsonObject.class);
         int postID = bodyObj.get("post").getAsInt();
-        String text = InputValidator.validateInput(bodyObj.get("text").getAsString(),1,255);
+        String text = InputValidator.validateInput(bodyObj.get("text").getAsString(), 1, 255);
 
-        try {
-            Post post = em.find(Post.class, postID);
-            Comment comment = new Comment(post, text, user);
-            em.getTransaction().begin();
-            em.persist(comment);
-            em.persist(post);
-            em.merge(user);
-            em.getTransaction().commit();
-
-            return GSON.toJson(postID);
-        } catch (Exception e) {
-            throw new InvalidInputException("Cloud not find post with id: " + postID);
-        }
+        return GSON.toJson(facade.addComment(postID, text, username));
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-
     @Path("{postID}")
     public String getCommetForPost(@PathParam("postID") String postID) throws InvalidInputException {
-        EntityManager em = EMF.createEntityManager();
+        return GSON.toJson(facade.getComments(Integer.parseInt(postID)));
+    }
 
-        try {
-            Query q = em.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postID", Comment.class);
-
-            q.setParameter("postID", Integer.parseInt(postID));
-            List<Comment> comments = q.getResultList();
-            CommentsDTO res = new CommentsDTO(comments);
-            return GSON.toJson(res);
-        } catch (Exception e) {
-            throw new InvalidInputException("fuck af so");
-        }
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{commentID}")
+    public String deleteComment(@PathParam("commentID") String commentID) throws InvalidInputException, DatabaseException {
+        int id = Integer.parseInt(InputValidator.validateInput(commentID, 1, 10000));
+        return GSON.toJson(facade.deleteComment(id));
     }
 }
