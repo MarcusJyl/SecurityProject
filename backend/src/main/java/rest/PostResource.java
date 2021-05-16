@@ -137,6 +137,11 @@ public class PostResource {
         }
         return GSON.toJson(facade.getAllPostsByTags(tags));
     }
+    
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    
 
 //    private UserPrincipal getUserPrincipalFromTokenIfValid(String token)
 //            throws ParseException, JOSEException, AuthenticationException {
