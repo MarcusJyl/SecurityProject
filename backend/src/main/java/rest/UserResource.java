@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entities.User;
+import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
 import errorhandling.NotFoundException;
 import facades.UserFacade;
@@ -17,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -184,5 +186,14 @@ public class UserResource {
 
         return GSON.toJson(usersDTO);
     }
-
+    
+    @DELETE
+    @Path("delete/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed("admin")
+    public String deleteUser(@PathParam("id") String id) throws NotFoundException, DatabaseException {
+        UserDTO deleteUser = facade.deleteUser(id);
+        return GSON.toJson(deleteUser);
+    }
+    
 }

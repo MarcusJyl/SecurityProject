@@ -109,23 +109,6 @@ public class PostFacade {
             em.close();
         }
     }
-    
-    public PostDTO deletePostByID(Long id) throws NotFoundException{
-        EntityManager em = emf.createEntityManager();
-        Post post = em.find(Post.class, id);
-        if(id == null){
-            throw new NotFoundException("No post with the id: %id could be found");
-        }else{
-            try{
-                em.getTransaction().begin();
-                em.remove(post);
-                em.getTransaction().commit();
-            }finally{
-                em.close();
-            }
-            return new PostDTO(post);
-        }
-    }
 
     public PostDTO deletePost(int postID) throws DatabaseException {
         EntityManager em = emf.createEntityManager();

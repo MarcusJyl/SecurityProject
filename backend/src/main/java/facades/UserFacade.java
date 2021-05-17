@@ -1,13 +1,18 @@
 package facades;
 
 import DTOs.UserDTO;
+import entities.Post;
 import entities.Role;
 import entities.User;
 import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
+import errorhandling.NotFoundException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import security.errorhandling.AuthenticationException;
 
 /**
@@ -51,6 +56,9 @@ public class UserFacade {
     public UserDTO addUser(UserDTO userDTO) throws InvalidInputException {
         EntityManager em = emf.createEntityManager();
         String name = null;
+        //if(!isValid(userDTO.getPassword())){
+        //    throw new InvalidInputException("Password must be a minium of 8 characters, contain one digit and one special character");
+        //}
         try {
             Query query = em.createQuery("SELECT u.userName FROM User u WHERE u.userName = :name");
             query.setParameter("name", userDTO.getName());
@@ -120,5 +128,36 @@ public class UserFacade {
         }
 
     }
+    
+    public UserDTO deleteUser(String userID) throws DatabaseException, NotFoundException {
+        EntityManager em = emf.createEntityManager();
 
+        User user = em.find(User.class, userID);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }else{
+            try {
+                em.getTransaction().begin();
+                Query query = em.createQuery("DELETE FROM Post p WHERE p.user.userName = :name");
+                query.setParameter("name", userID);
+                em.remove(user);
+                em.getTransaction().commit();
+            } finally {
+                em.close();
+            }
+            return new UserDTO(user);
+        }
+    }
+    /*
+     //checks for lowercase, uppercase, special character, digit and a passwordlength between 8 and 64 characters
+    private static final String PASSWORD_PATTERN
+            = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
+
+    private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+
+    private static boolean isValid(final String password) {
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+    */
 }

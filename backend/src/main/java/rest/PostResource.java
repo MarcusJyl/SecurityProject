@@ -141,14 +141,11 @@ public class PostResource {
         return GSON.toJson(facade.getAllPostsByTags(tags));
     }
     
-    @DELETE
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    
     
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{postID}")
+    @RolesAllowed({"admin"})
+    @Path("/delete/{postID}")
     public String deletePost(@PathParam("postID") String postID) throws InvalidInputException, DatabaseException {
         int id = Integer.parseInt(InputValidator.validateInput(postID, 1, 10000));
         return GSON.toJson(facade.deletePost(id));
