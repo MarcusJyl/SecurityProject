@@ -21,8 +21,8 @@ export const loginMethod = (user, pass, setUser) => {
 
 export const logoutMethode = async(setUser, init) => {
   setUser({...init});
-  await facade.logout()
   localStorage.removeItem("jwtToken")
+  await facade.logout()
 };
 
 

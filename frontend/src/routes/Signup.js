@@ -1,11 +1,14 @@
 import facade from "../facades/LoginFacade";
 import React, { useState, useEffect } from "react";
 import { Jumbotron, Row, Col, Form } from "react-bootstrap";
+import  { Redirect } from 'react-router-dom'
 
-function Signup() {
+function Signup({}) {
   const init = { username: "", password1: "", password2: "" };
   const [loginCredentials, setLoginCredentials] = useState(init);
   const [error, setError] = useState("");
+  const [sigendUp, setsigendUp] = useState(false);
+
 
   const performLogin = (evt) => {
     evt.preventDefault();
@@ -17,7 +20,7 @@ function Signup() {
       if (loginCredentials.password1 === loginCredentials.password2) {
         facade
           .signup(loginCredentials.username, loginCredentials.password1)
-          .then((data) => console.log(data))
+          .then(setsigendUp(true))
           .catch((err) => {
             if (err.status) {
               err.fullError.then((e) => {
@@ -62,6 +65,8 @@ function Signup() {
         </Jumbotron>
       </Col>
       <Col></Col>
+      {sigendUp && <Redirect to="/signin"/>}
+      
     </Row>
   );
 }

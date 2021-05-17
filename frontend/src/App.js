@@ -47,7 +47,7 @@ function App() {
               <Search searchResult={searchResult}/>
             </Route>
             <Route path="/signup">
-              <Signup />
+              <Signup login={login} user={user}/>
             </Route>
           </Container>
         </Switch>
