@@ -140,7 +140,12 @@ public class PostResource {
         }
         return GSON.toJson(facade.getAllPostsByTags(tags));
     }
-
+    
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    
+    
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{postID}")

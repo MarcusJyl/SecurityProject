@@ -12,7 +12,11 @@ import com.google.gson.Gson;
 import entities.Post;
 import entities.Tag;
 import entities.User;
+
+import errorhandling.NotFoundException;
+
 import errorhandling.DatabaseException;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -103,6 +107,23 @@ public class PostFacade {
             return postsDTO;
         } finally {
             em.close();
+        }
+    }
+    
+    public PostDTO deletePostByID(Long id) throws NotFoundException{
+        EntityManager em = emf.createEntityManager();
+        Post post = em.find(Post.class, id);
+        if(id == null){
+            throw new NotFoundException("No post with the id: %id could be found");
+        }else{
+            try{
+                em.getTransaction().begin();
+                em.remove(post);
+                em.getTransaction().commit();
+            }finally{
+                em.close();
+            }
+            return new PostDTO(post);
         }
     }
 
