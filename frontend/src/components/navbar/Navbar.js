@@ -26,6 +26,11 @@ function NavbarShow({ user, logout, setSearchInput, search }) {
               Profile
             </Link>
           }
+          {user.roles.includes("admin") &&
+            <Link to="/admin" className="nav-link">
+              Admin
+            </Link>
+          }
 
         </Nav>
         <Link to="/admin">Admin
