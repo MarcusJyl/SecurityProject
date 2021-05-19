@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.HeaderParam;
 import utils.EMF_Creator;
 import utils.Env;
+import utils.LoggingTest;
 import utils.VerifyRecaptcha;
 
 @Path("login")
@@ -48,11 +49,12 @@ public class LoginEndpoint {
         JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
 
         boolean isHuman = VerifyRecaptcha.verify(recaptchaResponse, ip);
-
+        
         String username = json.get("username").getAsString();
         String password = json.get("password").getAsString();
         if (isHuman || Env.isDev) {
             try {
+
                 User user = USER_FACADE.getVeryfiedUser(username, password);
                 String token = createToken(username, user.getRolesAsStrings());
                 JsonObject responseJson = new JsonObject();

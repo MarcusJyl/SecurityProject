@@ -65,6 +65,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import utils.InputValidator;
+import utils.LoggingTest;
 
 /**
  *
@@ -113,7 +114,8 @@ public class PostResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("all")
-    public String getAllPosts() {
+    public String getAllPosts() throws IOException {
+        LoggingTest.log();
         return GSON.toJson(facade.getAllPosts());
     }
 

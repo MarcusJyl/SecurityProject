@@ -23,6 +23,11 @@ function NavbarShow({ user, logout, setSearchInput, search }) {
               Profile
             </Link>
           }
+          {user.roles.includes("admin") &&
+            <Link to="/admin" className="nav-link">
+              Admin
+            </Link>
+          }
 
         </Nav>
         <input id="searchInput" type="text" placeholder="search" onChange={onChange} onKeyDown={evt => { if (evt.which == 13 || evt.keyCode == 13) search() }}></input>
