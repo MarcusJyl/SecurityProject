@@ -41,7 +41,7 @@ function App() {
             <Route path="/profile">
               <Profile setError={setError}/>
             </Route>
-            <Route path="/Admin">
+            <Route path="/admin">
               <Admin setError={setError}/>
             </Route>
             <Route path="/signin">
