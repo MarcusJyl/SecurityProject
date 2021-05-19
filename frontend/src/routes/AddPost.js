@@ -39,7 +39,7 @@ export default function AddPost({setError}) {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Make New POST IDK XDDD FUN HAHAHHAHAHAHA
+        Add new post
       </Button>
 
       <Modal show={show} onHide={handleClose}>

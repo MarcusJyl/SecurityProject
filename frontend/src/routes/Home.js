@@ -11,8 +11,6 @@ export default function Home({ setError }) {
   const [selectedTag, setSelectedTag] = useState("")
 
   useEffect(() => {
-    console.log("dasdasas")
-
     postFacade.getAllPosts(({ all }) => {
       setPosts([...all.reverse()])
     }, setError)

@@ -28,7 +28,12 @@ function postFacade() {
     return fetcher(URL + "/api/post", options, action, setError);
   }
 
-  return { getAllPosts, addPost, getAllCommentsForAPost, addComment, getAllPostsWithTags };
+  const deletePost = (action, setError, id) =>{
+    const options = makeOptions("DELETE", true);
+    return fetcher(URL + "/api/post/delete/"+ id, options, action, setError);
+  }
+
+  return { getAllPosts, addPost, getAllCommentsForAPost, addComment, getAllPostsWithTags, deletePost };
 }
 const facade = postFacade();
 export default facade;

@@ -6,6 +6,7 @@ import { Profile, Signup, Login, Home, Search } from "./routes";
 import { getUserByJwt, setToken } from "./utils/token";
 import {loginMethod, logoutMethode} from './utils/loginUtils'
 import searchFacade from './facades/searchFacade'
+import Admin from "./routes/Admin";
 
 function App() {
   const init = { username: "", roles: [] };
@@ -13,10 +14,11 @@ function App() {
   const [user, setUser] = useState({...init});
   const login = (user, pass) => loginMethod(user, pass, setUser)
   const logout = () => logoutMethode(setUser, init)
-
+  
   const [searchInput, setSearchInput] = useState("")
   const [searchResult, setSearchResult] = useState({})
   const search = () => searchFacade.search(setSearchResult, setError, searchInput)
+ 
 
 
 
@@ -39,7 +41,9 @@ function App() {
             <Route path="/profile">
               <Profile setError={setError}/>
             </Route>
-            <Route path="/products" />
+            <Route path="/Admin">
+              <Admin setError={setError}/>
+            </Route>
             <Route path="/signin">
               <Login login={login} user={user} logout={logout} />
             </Route>
