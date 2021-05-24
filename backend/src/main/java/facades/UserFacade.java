@@ -56,9 +56,9 @@ public class UserFacade {
     public UserDTO addUser(UserDTO userDTO) throws InvalidInputException {
         EntityManager em = emf.createEntityManager();
         String name = null;
-        //if(!isValid(userDTO.getPassword())){
-        //    throw new InvalidInputException("Password must be a minium of 8 characters, contain one digit and one special character");
-        //}
+        if(!isValid(userDTO.getPassword())){
+            throw new InvalidInputException("Password must be a minium of 8 characters, contain one digit and one special character");
+        }
         try {
             Query query = em.createQuery("SELECT u.userName FROM User u WHERE u.userName = :name");
             query.setParameter("name", userDTO.getName());
@@ -148,7 +148,7 @@ public class UserFacade {
             return new UserDTO(user);
         }
     }
-    /*
+    
      //checks for lowercase, uppercase, special character, digit and a passwordlength between 8 and 64 characters
     private static final String PASSWORD_PATTERN
             = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
@@ -159,5 +159,4 @@ public class UserFacade {
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
-    */
 }
