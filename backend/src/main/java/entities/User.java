@@ -91,7 +91,7 @@ public class User implements Serializable {
   }
 
   public void setUserPass(String userPass) {
-    this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt(6));
+    this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt(6, new SecureRandom(Env.salt.getBytes())));
   }
 
   public List<Role> getRoleList() {

@@ -115,7 +115,6 @@ public class PostResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("all")
     public String getAllPosts() throws IOException {
-        LoggingTest.log();
         return GSON.toJson(facade.getAllPosts());
     }
 

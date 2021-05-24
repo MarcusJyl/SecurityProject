@@ -1,4 +1,4 @@
-import { post } from "jquery";
+// import { post } from "jquery";
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import postFacade from "../facades/postFacade"
