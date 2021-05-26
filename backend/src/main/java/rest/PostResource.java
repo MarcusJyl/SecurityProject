@@ -108,6 +108,8 @@ public class PostResource {
             return GSON.toJson(post);
         } catch (Exception ex) {
             throw new InvalidInputException("Invalid Input");
+        } finally {
+            em.close();
         }
     }
 

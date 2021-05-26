@@ -53,10 +53,12 @@ public class CommentFacade {
             return new CommentDTO(comment);
         } catch (Exception e) {
             throw new InvalidInputException("Cloud not find post with id: " + postID);
+        } finally {
+            em.close();
         }
     }
-    
-    public CommentsDTO getComments(int postID) throws InvalidInputException{
+
+    public CommentsDTO getComments(int postID) throws InvalidInputException {
         EntityManager em = emf.createEntityManager();
 
         try {
@@ -67,6 +69,8 @@ public class CommentFacade {
             return new CommentsDTO(comments);
         } catch (Exception e) {
             throw new InvalidInputException("fuck af so");
+        } finally {
+            em.close();
         }
     }
 
@@ -83,6 +87,8 @@ public class CommentFacade {
             return new CommentDTO(comment);
         } catch (Exception e) {
             throw new DatabaseException("Unable to delete post try again");
+        } finally {
+            em.close();
         }
     }
 }

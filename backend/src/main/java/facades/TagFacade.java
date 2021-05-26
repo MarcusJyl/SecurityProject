@@ -49,7 +49,7 @@ public class TagFacade {
             Tag tag = getTagIfExist(string.toLowerCase());
             if (!(tag instanceof Tag)) {
                 tag = addTag(string.toLowerCase());
-            } 
+            }
             tags.add(tag);
         }
         return tags;
@@ -63,18 +63,23 @@ public class TagFacade {
             return tag;
         } catch (Exception e) {
             return null;
+        } finally {
+            em.close();
         }
     }
 
     private Tag addTag(String tagString) {
         EntityManager em = emf.createEntityManager();
-        
-        Tag tag = new Tag(tagString);
 
-        em.getTransaction().begin();
-        em.persist(tag);
-        em.getTransaction().commit();
-        
+        Tag tag = new Tag(tagString);
+        try {
+            em.getTransaction().begin();
+            em.persist(tag);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
         return tag;
     }
 

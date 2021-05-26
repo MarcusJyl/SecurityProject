@@ -48,6 +48,8 @@ public class SearchFacade {
             return searchDTO;
         } catch (Exception e) {
             throw new InvalidInputException("No post or user for input " + input);
+        } finally {
+            em.close();
         }
 
     }

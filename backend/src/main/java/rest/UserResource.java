@@ -180,6 +180,8 @@ public class UserResource {
             }
         } catch (Exception e) {
             throw new NotFoundException("got an invalid user id");
+        } finally {
+            em.close();
         }
 
         UsersDTO usersDTO = new UsersDTO(users);

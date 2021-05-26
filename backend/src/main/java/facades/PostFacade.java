@@ -55,43 +55,55 @@ public class PostFacade {
         List<Tag> tags = tagFacade.getTags(tagStrings);
         em.getTransaction().begin();
         Post post = new Post(user, dto.getTitle(), dto.getContent());
+        try {
+            em.persist(post);
+            for (Tag tag : tags) {
+                post.addTag(tag);
+                em.merge(tag);
+            }
+            em.merge(post);
+            em.getTransaction().commit();
 
-        em.persist(post);
-        for (Tag tag : tags) {
-            post.addTag(tag);
-            em.merge(tag);
+        } finally {
+            em.close();
         }
-        em.merge(post);
-        em.getTransaction().commit();
         return post;
     }
 
     public PostsDTO getAllPosts() {
         EntityManager em = emf.createEntityManager();
-
-        PostsDTO dtos = new PostsDTO(em.createQuery("SELECT p FROM Post p WHERE p.isHidden = 0").getResultList());
+        PostsDTO dtos = null;
+        try {
+            dtos = new PostsDTO(em.createQuery("SELECT p FROM Post p WHERE p.isHidden = 0").getResultList());
+        } finally {
+            em.close();
+        }
 
         return dtos;
     }
 
     public PostsDTO getAllPostsByTags(String[] tagsStrings) {
         EntityManager em = emf.createEntityManager();
+        PostsDTO dtos = null;
+        try {
+            TypedQuery<Tag> query = em.createQuery(
+                    "SELECT t FROM Tag t WHERE t.tagName IN :numbers", Tag.class);
 
-        TypedQuery<Tag> query = em.createQuery(
-                "SELECT t FROM Tag t WHERE t.tagName IN :numbers", Tag.class);
+            List<String> empNumbers = Arrays.asList(tagsStrings);
+            List<Tag> tags = query.setParameter("numbers", empNumbers).getResultList();
 
-        List<String> empNumbers = Arrays.asList(tagsStrings);
-        List<Tag> tags = query.setParameter("numbers", empNumbers).getResultList();
-
-        List<Post> posts = new ArrayList();
-        for (Tag tag : tags) {
-            for (Post post : tag.getPostList()) {
-                if (!post.isIsHidden()) {
-                    posts.add(post);
+            List<Post> posts = new ArrayList();
+            for (Tag tag : tags) {
+                for (Post post : tag.getPostList()) {
+                    if (!post.isIsHidden()) {
+                        posts.add(post);
+                    }
                 }
             }
+            dtos = new PostsDTO(posts);
+        } finally {
+            em.close();
         }
-        PostsDTO dtos = new PostsDTO(posts);
         return dtos;
     }
 
@@ -123,6 +135,8 @@ public class PostFacade {
             return new PostDTO(post);
         } catch (Exception e) {
             throw new DatabaseException("Unable to delete post try again");
+        } finally {
+            em.close();
         }
     }
 
@@ -145,6 +159,8 @@ public class PostFacade {
             return new PostDTO(post);
         } catch (Exception e) {
             throw new DatabaseException("Unable to edit post");
+        } finally {
+            em.close();
         }
 
     }

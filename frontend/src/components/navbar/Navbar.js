@@ -21,12 +21,12 @@ function NavbarShow({ user, logout, setSearchInput, search }) {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
-          {user.username !== "" &&
+          {user.username && user.username !== "" &&
             <Link to="/profile" className="nav-link">
               Profile
             </Link>
           }
-          {user.roles.includes("admin") &&
+          {user.roles && user.roles.includes("admin") &&
             <Link to="/admin" className="nav-link">
               Admin
             </Link>

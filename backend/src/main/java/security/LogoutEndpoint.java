@@ -55,9 +55,9 @@ public class LogoutEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String logout(@HeaderParam("x-access-token") String token) throws AuthenticationException, ParseException, KeyLengthException, JOSEException {
-        
+
         EntityManager em = EMF.createEntityManager();
-        
+
         SignedJWT signedJWT = SignedJWT.parse(token);
         JWTClaimsSet c = signedJWT.getJWTClaimsSet();
         String username = c.getClaims().get("username").toString();
@@ -66,11 +66,15 @@ public class LogoutEndpoint {
         DateFormat dateFormat = new SimpleDateFormat(
                 "EEE MMM dd HH:mm:ss zzzz yyyy", Locale.ENGLISH);
 
-        InvalidJWT jwt = new InvalidJWT(token, username ,dateFormat.parse(exp));
-        em.getTransaction().begin();
-        em.persist(jwt);
-        em.getTransaction().commit();
-        
+        InvalidJWT jwt = new InvalidJWT(token, username, dateFormat.parse(exp));
+        try {
+            em.getTransaction().begin();
+            em.persist(jwt);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+
         return signedJWT.serialize(false);
     }
 

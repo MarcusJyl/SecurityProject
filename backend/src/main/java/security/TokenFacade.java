@@ -23,8 +23,14 @@ public class TokenFacade {
     public static boolean isJWTBlackListed(String token, String username) {
         EntityManager em = EMF.createEntityManager();
 
-        Query query = em.createQuery("SELECT j FROM InvalidJWT j WHERE j.username = :username", InvalidJWT.class);
-        List<InvalidJWT> JWTS = query.setParameter("username", username).getResultList();
+        List<InvalidJWT> JWTS = null;
+        try {
+            Query query = em.createQuery("SELECT j FROM InvalidJWT j WHERE j.username = :username", InvalidJWT.class);
+            JWTS = query.setParameter("username", username).getResultList();
+        } finally {
+            em.close();
+        }
+
         return containsToken(token, JWTS);
     }
 

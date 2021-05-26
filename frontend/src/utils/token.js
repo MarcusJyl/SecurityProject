@@ -33,7 +33,7 @@ export function getUserByJwt() {
       username: tokenUser.username,
       roles: [...tokenUser.roles.split(",")],
     };
-
+    console.log(tokenUser)
     return tempUser
   }
 }
