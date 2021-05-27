@@ -5,28 +5,19 @@
  */
 package rest;
 
-import DTOs.CommentsDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import entities.Comment;
-import entities.Post;
-import entities.User;
 import errorhandling.DatabaseException;
 import errorhandling.InvalidInputException;
 import facades.CommentFacade;
-import facades.PostFacade;
-import facades.UserFacade;
 import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import utils.EMF_Creator;
-import java.util.List;
-import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;

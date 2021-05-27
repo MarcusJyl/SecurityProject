@@ -7,15 +7,12 @@ package facades;
 
 import DTOs.PostsDTO;
 import DTOs.SearchDTO;
-import DTOs.UserDTO;
 import DTOs.UsersDTO;
 import entities.User;
 import errorhandling.InvalidInputException;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 /**
  *

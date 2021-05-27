@@ -7,27 +7,18 @@ package facades;
 
 import DTOs.PostDTO;
 import DTOs.PostsDTO;
-import DTOs.UserDTO;
-import com.google.gson.Gson;
 import entities.Post;
 import entities.Tag;
 import entities.User;
 
-import errorhandling.NotFoundException;
 
 import errorhandling.DatabaseException;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**

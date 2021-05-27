@@ -41,7 +41,6 @@ export default function Footer({ setShowComments, setError, postID, isOnProfileP
                     <div className="w-100 text-center">
                         <a href="#" onClick={(evt) => { evt.preventDefault(); setShowComments(true) }} className="ml-2" style={{ float: "left" }}>Show comments</a>
                         <a href="#" className="mr-2" onClick={(evt) => { evt.preventDefault(); setShowAddComment(true) }}>Comment</a>
-                        <a href="#" className="mr-2" style={{ float: 'right' }}>Like</a>
                     </div>
 
                 </>}

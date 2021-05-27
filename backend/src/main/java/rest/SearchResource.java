@@ -8,7 +8,6 @@ package rest;
 import com.google.gson.Gson;
 import errorhandling.InvalidInputException;
 import facades.SearchFacade;
-import facades.UserFacade;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

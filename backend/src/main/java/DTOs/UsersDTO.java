@@ -5,7 +5,6 @@
  */
 package DTOs;
 
-import entities.Post;
 import entities.User;
 import java.util.ArrayList;
 import java.util.List;

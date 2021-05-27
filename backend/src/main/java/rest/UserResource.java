@@ -29,7 +29,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import security.UserPrincipal;
 import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
 import utils.InputValidator;

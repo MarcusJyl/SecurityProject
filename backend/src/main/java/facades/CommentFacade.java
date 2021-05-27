@@ -7,7 +7,6 @@ package facades;
 
 import DTOs.CommentDTO;
 import DTOs.CommentsDTO;
-import DTOs.PostDTO;
 import entities.Comment;
 import entities.Post;
 import entities.User;

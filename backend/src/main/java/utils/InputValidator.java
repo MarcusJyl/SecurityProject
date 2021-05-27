@@ -5,11 +5,9 @@
  */
 package utils;
 
-import static com.mysql.cj.conf.PropertyKey.logger;
 import errorhandling.InvalidInputException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

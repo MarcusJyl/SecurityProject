@@ -26,11 +26,9 @@ import security.errorhandling.AuthenticationException;
 import errorhandling.GenericExceptionMapper;
 import java.io.IOException;
 import javax.persistence.EntityManagerFactory;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.HeaderParam;
 import utils.EMF_Creator;
 import utils.Env;
-import utils.LoggingTest;
 import utils.VerifyRecaptcha;
 
 @Path("login")

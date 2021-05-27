@@ -5,18 +5,11 @@
  */
 package facades;
 
-import DTOs.UserDTO;
-import entities.Role;
 import entities.Tag;
-import entities.User;
-import errorhandling.DatabaseException;
-import errorhandling.InvalidInputException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-import security.errorhandling.AuthenticationException;
 
 /**
  *

@@ -1,7 +1,6 @@
 package facades;
 
 import DTOs.UserDTO;
-import entities.Post;
 import entities.Role;
 import entities.User;
 import errorhandling.DatabaseException;
@@ -12,7 +11,6 @@ import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import security.errorhandling.AuthenticationException;
 
 /**

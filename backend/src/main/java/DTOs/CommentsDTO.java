@@ -6,7 +6,6 @@
 package DTOs;
 
 import entities.Comment;
-import entities.Post;
 import java.util.ArrayList;
 import java.util.List;
 
