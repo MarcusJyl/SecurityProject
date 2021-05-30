@@ -4,7 +4,7 @@ import AddPost from './AddPost'
 import { Col, Row, Modal, Button } from 'react-bootstrap'
 import postFacade from '../facades/postFacade'
 
-export default function Home({ setError }) {
+export default function Home({ setError, user }) {
 
   const [title, setTitle] = useState("")
   const [posts, setPosts] = useState([])
@@ -37,7 +37,7 @@ export default function Home({ setError }) {
               <h2>{selectedTag}</h2>
               <Button className="btn-danger m-1" onClick={() => setSelectedTag("")}>Reset tags</Button><br/>
             </>}
-          <AddPost setError={setError} />
+          <AddPost setError={setError} user={user}/>
         </Col>
         <Col md={2}></Col>
       </Row>

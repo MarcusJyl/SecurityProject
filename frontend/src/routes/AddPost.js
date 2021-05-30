@@ -38,7 +38,7 @@ export default function AddPost({ setError, user }) {
 
   return (
     <>
-      {user && 
+      {(user && user.username != "") && 
       <Button variant="primary" onClick={handleShow}>
         Add new post
       </Button>}

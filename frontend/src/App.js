@@ -36,7 +36,7 @@ function App() {
         <Switch>
           <Container fluid>
             <Route path="/" exact>
-              <Home setError={setError}/>
+              <Home setError={setError} user={user}/>
             </Route>
             <Route path="/profile">
               <Profile setError={setError}/>
