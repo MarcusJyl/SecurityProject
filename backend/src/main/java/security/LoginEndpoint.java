@@ -50,7 +50,7 @@ public class LoginEndpoint {
         
         String username = json.get("username").getAsString();
         String password = json.get("password").getAsString();
-        if (isHuman || Env.isDev) {
+        if (isHuman) {
             try {
 
                 User user = USER_FACADE.getVeryfiedUser(username, password);
