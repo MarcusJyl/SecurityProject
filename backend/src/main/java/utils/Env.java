@@ -16,15 +16,16 @@ public class Env {
     public static boolean isDev = true;
     public static String secret = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     public static String salt = "dasdasdasdasdassaasdaasdasdasdasaasd";
-    public static String recaptchaSecret;
+    private static String recaptchaSecret;
 
     public Env() {
-        if (System.getenv("DEPLOYED") != null) {
-            recaptchaSecret = System.getenv("RECAPTCHA");
-                isDev = false;
-                secret = System.getenv("SECRET");
-                salt = System.getenv("SALT");
+        boolean isDeployed = (System.getenv("DEPLOYED") != null);
 
+        if (isDeployed) {
+            recaptchaSecret = System.getenv("RECAPTCHA");
+            isDev = false;
+            secret = System.getenv("SECRET");
+            salt = System.getenv("SALT");
         }
     }
 
@@ -34,4 +35,10 @@ public class Env {
         }
         return intance;
     }
+
+    public static String getRecaptchaSecret() {
+        return recaptchaSecret;
+    }
+    
+    
 }
