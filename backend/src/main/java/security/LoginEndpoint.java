@@ -37,6 +37,7 @@ public class LoginEndpoint {
     public static final int TOKEN_EXPIRE_TIME = 1000 * 60 * 30; //30 min
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final UserFacade USER_FACADE = UserFacade.getUserFacade(EMF);
+    private static final Env env = new Env();
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -50,7 +51,7 @@ public class LoginEndpoint {
         
         String username = json.get("username").getAsString();
         String password = json.get("password").getAsString();
-        if (isHuman) {
+        if (isHuman || env.isDev) {
             try {
 
                 User user = USER_FACADE.getVeryfiedUser(username, password);

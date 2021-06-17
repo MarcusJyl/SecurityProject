@@ -22,6 +22,8 @@ public class VerifyRecaptcha {
 
 	public static boolean verify(String gRecaptchaResponse, String ip) throws IOException {
             System.out.println(gRecaptchaResponse);
+                        System.out.println(secret);
+
 		if (gRecaptchaResponse == null || "".equals(gRecaptchaResponse)) {
 			return false;
 		}
