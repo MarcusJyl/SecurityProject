@@ -20,11 +20,12 @@ public class Env {
 
     public Env() {
         if (System.getenv("DEPLOYED") != null) {
+            recaptchaSecret = System.getenv("RECAPTCHA");
             if (System.getenv("DEPLOYED") == "PROD") {
                 isDev = false;
                 secret = System.getenv("SECRET");
                 salt = System.getenv("SALT");
-                recaptchaSecret = System.getenv("RECAPTCHA");
+                
             }
 
         }
